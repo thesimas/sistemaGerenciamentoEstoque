@@ -18,7 +18,7 @@
 
 Este projeto é um **Sistema de Controle de Estoque Multi-usuário**. O objetivo principal foi criar uma aplicação onde múltiplas empresas (clientes) pudessem gerenciar seus estoques dentro da mesma plataforma, garantindo total privacidade e segurança dos dados.
 
-O sistema simula um modelo de negócio **SaaS (Software as a Service)** ou "Aluguel de Software":
+O sistema simula um modelo de negócio **SaaS (Software as a Service)**:
 > **Nota de Negócio:** Não existe uma tela de "Cadastre-se" pública. A ideia é que o sistema seja comercializado por mensalidade. O **Administrador** (dono do software) cadastra a empresa contratante diretamente no banco de dados. Após o primeiro acesso, o cliente pode gerenciar seus dados na área "Meu Perfil".
 
 ---
