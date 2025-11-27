@@ -1,7 +1,7 @@
 <div align="center">
   <h1>📦 Sistema de Gerenciamento de Estoque</h1>
   <p>
-    Um sistema web robusto desenvolvido em <strong>PHP Puro</strong>, focado na aplicação prática de Engenharia de Software.
+    Um sistema web desenvolvido em <strong>PHP Puro</strong>, focado na aplicação prática de Engenharia de Software.
   </p>
   
   <p>
@@ -55,14 +55,14 @@ O cliente tem acesso a um **Dashboard** intuitivo para gerenciar seu negócio:
 * **Meu Perfil:** Alteração de dados cadastrais e senha.
 
 ### 🛡️ Perfil: Administrador (Dono)
-* **Gestão de Inquilinos:** Visualizar e gerenciar as empresas que utilizam o sistema.
-* **Exclusão em Cascata:** Ao excluir um cliente inadimplente, o sistema limpa automaticamente todos os produtos e dados vinculados a ele.
+* **Gestão de Usuários:** Visualizar e gerenciar as empresas que utilizam o sistema.
+* **Exclusão em Cascata(Banco de Dados):** Ao excluir um cliente inadimplente, o sistema limpa automaticamente todos os produtos e dados vinculados a ele.
 
 ---
 
 ## 💻 Tecnologias Utilizadas
 
-O projeto foi construído sem o uso de frameworks pesados para demonstrar domínio da linguagem base:
+O projeto foi construído sem o uso de frameworks, a ideia é praticar as operações de CRUD utilizando uma linguagem acessível como o PHP:
 
 * **Back-end:** PHP 8+ (Puro/Nativo).
 * **Banco de Dados:** MySQL (Uso de PDO para segurança).
@@ -92,5 +92,5 @@ Para rodar este sistema na sua máquina local, siga os passos:
 
 <footer align="center">
   <p>Desenvolvido por <strong>Luciano Simas Junior</strong></p>
-  <p>Projeto Integrador - Desenvolvimento de Sistemas</p>
+  <p>Projeto Integrador (IFSC)- Técnico em Desenvolvimento de Sistemas</p>
 </footer>
