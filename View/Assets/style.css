@@ -1,0 +1,251 @@
+/* =========================================
+   1. RESET E GERAL
+   ========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f0f2f5;
+    color: #333;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+a { text-decoration: none; }
+
+/* =========================================
+   2. NAVBAR (Fixa e Estável)
+   ========================================= */
+nav {
+    background-color: #343a40;
+    color: white;
+    padding: 0 2rem;
+    height: 60px; /* Altura fixa para não pular */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-brand .company-name {
+    font-size: 1.1rem;
+    font-weight: bold;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    color: #ced4da;
+    font-weight: 500;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.nav-links a:hover {
+    background-color: rgba(255,255,255,0.1);
+    color: #fff;
+}
+
+.btn-logout {
+    background-color: #dc3545;
+    color: white !important;
+    padding: 6px 15px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: background 0.3s;
+}
+
+.btn-logout:hover { background-color: #c82333; }
+
+/* =========================================
+   3. CONTAINER PRINCIPAL (Largo e Centralizado)
+   ========================================= */
+.container {
+    width: 95%; /* Ocupa 95% da largura da tela */
+    max-width: 100%; /* Remove limites fixos de pixel */
+    margin: 30px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+@media (min-width: 1920px) {
+    .container {
+        max-width: 1800px; /* Limite apenas em telas 4k/FullHD wide */
+    }
+}
+
+h1 {
+    margin-bottom: 25px;
+    color: #343a40;
+    border-bottom: 2px solid #dee2e6;
+    padding-bottom: 10px;
+}
+
+/* =========================================
+   4. TABELAS (Ocupam 100% do Container)
+   ========================================= */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background-color: white;
+}
+
+thead {
+    background-color: #343a40;
+    color: white;
+}
+
+th, td {
+    padding: 15px; /* Mais espaço interno nas células */
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Efeito Zebrado e Hover */
+tbody tr:nth-child(even) { background-color: #f8f9fa; }
+tbody tr:hover { background-color: #e9ecef; }
+
+/* Coluna de Ações (Alinhada a direita ou centro) */
+td:last-child { white-space: nowrap; } /* Impede que botões quebrem linha */
+
+/* =========================================
+   5. BOTÕES E LINKS (Alto Contraste)
+   ========================================= */
+.btn {
+    display: inline-block;
+    background-color: #28a745; /* Verde padrão */
+    color: white !important; /* Força texto branco */
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity 0.2s;
+}
+.btn:hover { opacity: 0.9; }
+
+/* Botões de Ação na Tabela (Pequenos) */
+.btn-acao {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-right: 5px;
+    display: inline-block;
+    text-decoration: none;
+}
+
+/* Botão Editar (Amarelo -> Texto Preto OBRIGATÓRIO para contraste) */
+.btn-editar {
+    background-color: #ffc107;
+    color: #212529 !important; /* Texto escuro */
+    border: 1px solid #e0a800;
+}
+.btn-editar:hover { background-color: #e0a800; }
+
+/* Botão Excluir (Vermelho -> Texto Branco) */
+.btn-excluir {
+    background-color: #dc3545;
+    color: white !important;
+    border: 1px solid #c82333;
+}
+.btn-excluir:hover { background-color: #c82333; }
+
+/* Botão Cancelar/Voltar (Cinza) */
+.btn-secondary {
+    background-color: #6c757d;
+    color: white !important;
+}
+
+/* =========================================
+   6. FORMULÁRIOS
+   ========================================= */
+form fieldset {
+    border: 1px solid #ced4da;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+form legend {
+    font-weight: bold;
+    color: #007bff;
+    padding: 0 5px;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 15px 0;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+
+/* =========================================
+   7. LOGIN 
+   ========================================= */
+body.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+}
+
+.login-card {
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.titulo-login {
+    padding: 15px;
+    border: 1px solid black;
+    background-color: #007bff;
+    font-size: x-large;
+    color: white;
+    border-radius: 5px;
+}
+
+
+/* =========================================
+   7. Links no form do cadastrar produto  
+   ========================================= */
+
+.gerencia {
+    background-color: ivory;
+    font-size: larger;
+    font-style: oblique;
+    color: #007bff;
+    border-radius: 3px;
+    font-weight: lighter;
+}
+
+.btn-link {
+    display: inline-block;
+    color: white !important; /* Força texto branco */
+    padding: 6px 12px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity 0.2s;
+}

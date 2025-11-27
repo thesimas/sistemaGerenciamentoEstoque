@@ -1,0 +1,94 @@
+@startuml
+
+' Configurações visuais
+skinparam classAttributeIconSize 0
+skinparam classBackgroundColor White
+skinparam classBorderColor Black
+skinparam classArrowColor Black
+
+' --- Classes de Usuário ---
+
+abstract class Usuario {
+    # id: int
+    # nome: string
+    # email: string
+    # senha: string
+    + login(email, senha): bool
+    + logout(): void
+    {abstract} + getPaginaInicial(): string
+}
+
+class Administrador {
+    + cadastrarUsuario(u: Usuario): void
+    + desativarUsuario(id: int): void
+    + listarUsuarios(): List<Usuario>
+}
+
+class Cliente {
+    ' O Cliente é quem usa o sistema de estoque
+    + cadastrarProduto(p: Produto): void
+    + cadastrarFornecedor(f: Fornecedor): void
+    + verRelatorioMovimentacao(): List<Movimentacao>
+}
+
+' Herança
+Usuario <|-- Administrador
+Usuario <|-- Cliente
+
+' --- Classes de Domínio (Estoque) ---
+
+class Produto {
+    - id: int
+    - sku: string
+    - nome: string
+    - descricao: string
+    - preco: float
+    - quantidade: int
+    - estoqueMinimo: int
+    - id_usuario: int
+    - id_fornecedor: int
+    - id_categoria: int
+    + registrarEntrada(qtd: int): void
+    + registrarSaida(qtd: int): void
+    + verificarAlerta(): bool
+}
+
+class Fornecedor {
+    - id: int
+    - nomeEmpresa: string
+    - cnpj: string
+    - email: string
+    - telefone: string
+    - id_usuario: int
+}
+
+class Categoria {
+    - id: int
+    - nome: string
+}
+
+class Movimentacao {
+    - id: int
+    - tipo: Enum ['entrada', 'saida']
+    - quantidade: int
+    - data: DateTime
+    - motivo: string
+    - id_produto: int
+}
+
+' --- Relacionamentos ---
+
+' Admin gerencia Clientes
+Administrador "1" .right.> "*" Cliente : gerencia >
+
+' Cliente possui seus dados (Multi-tenancy)
+Cliente "1" -- "*" Produto : possui >
+Cliente "1" -- "*" Fornecedor : possui >
+
+' Relacionamentos do Produto
+Produto "*" -- "1" Fornecedor : fornecido por >
+Produto "*" -- "1" Categoria : pertence a >
+
+' Composição: Movimentação só existe se houver produto
+Produto "1" *-- "*" Movimentacao : possui histórico >
+@enduml
