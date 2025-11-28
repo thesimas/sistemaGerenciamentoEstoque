@@ -33,7 +33,7 @@
                     header("Location: " . $endereco);
                     exit();
                 } else {
-                    echo "<p>Login ou senha incorretos. Tente novamente.</p>";
+                    echo "<p>Login ou senha incorretos. Tente novamente.</p>"; // Corrigir esse echo, pois ele irá direcionar para uma página em branco. 
                     header("Refresh: 3");
                     exit();
                 }

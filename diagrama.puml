@@ -13,22 +13,20 @@ abstract class Usuario {
     # nome: string
     # email: string
     # senha: string
+    # tipo: Enum ['admin', 'cliente']
     + login(email, senha): bool
     + logout(): void
-    {abstract} + getPaginaInicial(): string
+    {abstract} + enderecoPaginaInicial(): string
 }
 
 class Administrador {
-    + cadastrarUsuario(u: Usuario): void
-    + desativarUsuario(id: int): void
-    + listarUsuarios(): List<Usuario>
+    + excluirUsuario(id: int): void
+    + listarUsuarios(idAdmin: int): List<Usuario>
 }
 
 class Cliente {
-    ' O Cliente é quem usa o sistema de estoque
-    + cadastrarProduto(p: Produto): void
-    + cadastrarFornecedor(f: Fornecedor): void
-    + verRelatorioMovimentacao(): List<Movimentacao>
+    - nomeEmpresa: string
+    + getNomeEmpresa(): string
 }
 
 ' Herança
@@ -48,9 +46,12 @@ class Produto {
     - id_usuario: int
     - id_fornecedor: int
     - id_categoria: int
-    + registrarEntrada(qtd: int): void
-    + registrarSaida(qtd: int): void
-    + verificarAlerta(): bool
+    + salvar(): int
+    + listarPorUsuario(id_usuario: int): List<Produto>
+    + atualizarQuantidade(id, qtd, id_user): void
+    + excluirProduto(id, id_user): void
+    + buscarPorId(id, id_user): Produto
+    + atualizar(...): void
 }
 
 class Fornecedor {
@@ -60,11 +61,20 @@ class Fornecedor {
     - email: string
     - telefone: string
     - id_usuario: int
+    + salvar(): void
+    + listarFornecedores(id_usuario: int): List<Fornecedor>
+    + excluirFornecedor(id_user, id_forn): void
+    + atualizar(...): void
 }
 
 class Categoria {
     - id: int
     - nome: string
+    - id_usuario: int
+    + salvar(): void
+    + listarCategorias(id_usuario: int): List<Categoria>
+    + excluirCategoria(id_user, id_cat): void
+    + atualizar(...): void
 }
 
 class Movimentacao {
@@ -74,6 +84,9 @@ class Movimentacao {
     - data: DateTime
     - motivo: string
     - id_produto: int
+    - id_usuario: int
+    + registrar(): void
+    + listarPorUsuario(id_usuario: int): List<Movimentacao>
 }
 
 ' --- Relacionamentos ---
@@ -81,14 +94,20 @@ class Movimentacao {
 ' Admin gerencia Clientes
 Administrador "1" .right.> "*" Cliente : gerencia >
 
-' Cliente possui seus dados (Multi-tenancy)
+' Cliente possui seus dados (Multi-tenancy / Isolamento)
 Cliente "1" -- "*" Produto : possui >
 Cliente "1" -- "*" Fornecedor : possui >
+Cliente "1" -- "*" Categoria : possui >
+
+' Relação de autoria da movimentação
+Cliente "1" -- "*" Movimentacao : registra >
 
 ' Relacionamentos do Produto
-Produto "*" -- "1" Fornecedor : fornecido por >
-Produto "*" -- "1" Categoria : pertence a >
+' 0..1 significa que o fornecedor/categoria pode ser nulo (se for deletado)
+Produto "*" -- "0..1" Fornecedor : fornecido por >
+Produto "*" -- "0..1" Categoria : pertence a >
 
 ' Composição: Movimentação só existe se houver produto
-Produto "1" *-- "*" Movimentacao : possui histórico >
+Produto "1" *-- "*" Movimentacao : histórico >
+
 @enduml

@@ -55,19 +55,19 @@
             $id_categoria = $_POST['id_categoria'];
 
             if(empty($sku) || empty($nome) || empty($descricao) || empty($preco) || empty($quantidade) || empty($estoqueMinimo) || empty($id_fornecedor) || empty($id_categoria)){
-                echo "<p>Todos os campos são obrigatórios.</p>";
+                echo "<p>Todos os campos são obrigatórios.</p>"; // Corrigir esse echo, pois ele irá direcionar para uma página em branco. 
                 header("Refresh: 3; URL=../Controller/ProdutoController.php?acao=prepararCadastro");
                 exit();
             }
 
             if(!is_numeric($preco) || !is_numeric($quantidade) || !is_numeric($estoqueMinimo)){
-                echo "<p>Os campos preço, quantidade e estoque mínimo devem ser numéricos.</p>";
+                echo "<p>Os campos preço, quantidade e estoque mínimo devem ser numéricos.</p>"; // Corrigir esse echo, pois ele irá direcionar para uma página em branco. 
                 header("Refresh: 3; URL=../Controller/ProdutoController.php?acao=prepararCadastro");
                 exit();
             }
 
             if($preco < 0 || $quantidade < 0 || $estoqueMinimo < 0){
-                echo "<p>Os campos preço, quantidade e estoque mínimo não podem ser negativos.</p>";
+                echo "<p>Os campos preço, quantidade e estoque mínimo não podem ser negativos.</p>"; // Corrigir esse echo, pois ele irá direcionar para uma página em branco. 
                 header("Refresh: 3; URL=../Controller/ProdutoController.php?acao=prepararCadastro");
                 exit();
             }

@@ -45,7 +45,7 @@
                     <?php foreach($listaDeprodutos as $prod): ?>
                         <?php 
                             // Lógica visual: Verifica se estoque está baixo
-                            $alerta = $prod['quantidade'] <= $prod['estoque_minimo'];
+                            $alerta = $prod['quantidade'] < $prod['estoque_minimo'];
                             $classeLinha = $alerta ? 'style="background-color: #fff3cd;"' : ''; 
                             $textoStatus = $alerta ? '<span style="color:red; font-weight:bold;">BAIXO!</span>' : '<span style="color:green;">OK</span>';
                         ?>

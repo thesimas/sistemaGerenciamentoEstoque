@@ -67,6 +67,7 @@
             $conexao = Conexao::Conectar();
 
             $consultaSql = "DELETE FROM categorias WHERE id_usuario = :id_usuario AND id = :id_categoria";
+            
             $declaracao = $conexao -> prepare($consultaSql);
             $declaracao->bindValue(':id_usuario', $id_usuario);
             $declaracao->bindValue(':id_categoria', $id_categoria);
