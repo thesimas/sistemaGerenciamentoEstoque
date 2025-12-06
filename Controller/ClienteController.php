@@ -16,10 +16,31 @@
 
         // Futuras implementações:
         public function perfil(){
+            if(!isset($_SESSION['id'])){
+                header("Location: ../index.php");
+                exit();
+            }
+
             echo "<h1>Página de Perfil em construção...</h1>";
         }
 
         public function configuracoes(){
+
+            if(!isset($_SESSION['id'])){
+                header("Location: ../index.php");
+                exit();
+            }
+
+            echo "<h1>Página de Configurações em construção...</h1>";
+        }
+
+        public function relatorios(){
+
+            if(!isset($_SESSION['id'])){
+                header("Location: ../index.php");
+                exit();
+            }
+            
             echo "<h1>Página de Configurações em construção...</h1>";
         }
     }
@@ -35,6 +56,9 @@
                 break;
             case 'configuracoes':
                 $controller->configuracoes();
+                break;
+            case 'relatorios':
+                $controller -> relatorios();
                 break;
         }
     }

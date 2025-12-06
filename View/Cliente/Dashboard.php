@@ -93,7 +93,7 @@
                 <div class="menu-title">Fornecedores</div>
             </a>
 
-            <a href="#" onclick="alert('Em breve!')" class="menu-card" style="opacity: 0.7;">
+            <a href="../Controller/RelatorioController.php?acao=prepararMenu" class="menu-card">
                 <div class="menu-icon">📊</div>
                 <div class="menu-title">Relatórios</div>
             </a>

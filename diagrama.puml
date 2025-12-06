@@ -1,113 +1,124 @@
 @startuml
-
 ' Configurações visuais
 skinparam classAttributeIconSize 0
 skinparam classBackgroundColor White
 skinparam classBorderColor Black
 skinparam classArrowColor Black
+skinparam linetype ortho
 
-' --- Classes de Usuário ---
+title Diagrama de Classes - Sistema de Estoque (MVC + Active Record)
+
+' ==========================================
+' INFRAESTRUTURA (Singleton)
+' ==========================================
+class Conexao {
+    + {static} Conectar(): PDO
+}
+
+' ==========================================
+' MODEL - SERVIÇOS
+' ==========================================
+
+class Relatorio {
+    ' Classe de Serviço: Processa dados sem manter estado persistente
+    + gerarTotalEstoque(id_usuario: int): Array
+    + gerarHistoricoMovimentacoesPorData(...): Array
+    + geraProdutosMaisVendidos(...): Array
+}
+
+' ==========================================
+' MODEL - ENTIDADES DE NEGÓCIO
+' ==========================================
 
 abstract class Usuario {
     # id: int
     # nome: string
     # email: string
     # senha: string
-    # tipo: Enum ['admin', 'cliente']
-    + login(email, senha): bool
+    # tipo: Enum
+    + {static} verificaLogin(email, senha): Array
     + logout(): void
     {abstract} + enderecoPaginaInicial(): string
 }
 
 class Administrador {
-    + excluirUsuario(id: int): void
-    + listarUsuarios(idAdmin: int): List<Usuario>
+    + excluirUsuario(id: int): bool
+    + listarUsuarios(idAdmin: int): List
 }
 
 class Cliente {
     - nomeEmpresa: string
     + getNomeEmpresa(): string
+    + enderecoPaginaInicial(): string
 }
 
-' Herança
-Usuario <|-- Administrador
-Usuario <|-- Cliente
-
-' --- Classes de Domínio (Estoque) ---
-
 class Produto {
-    - id: int
-    - sku: string
-    - nome: string
-    - descricao: string
-    - preco: float
-    - quantidade: int
-    - estoqueMinimo: int
-    - id_usuario: int
-    - id_fornecedor: int
-    - id_categoria: int
+    - id, sku, nome, descricao: ...
+    - preco, quantidade, estoqueMinimo: ...
+    - id_usuario, id_fornecedor, id_categoria: int
     + salvar(): int
-    + listarPorUsuario(id_usuario: int): List<Produto>
-    + atualizarQuantidade(id, qtd, id_user): void
-    + excluirProduto(id, id_user): void
-    + buscarPorId(id, id_user): Produto
-    + atualizar(...): void
+    + listarPorUsuario(...): List
+    + atualizarQuantidade(...): bool
+    + buscarPorId(...): Produto
+    + atualizar(...): bool
+    + excluirProduto(...): bool
 }
 
 class Fornecedor {
-    - id: int
-    - nomeEmpresa: string
-    - cnpj: string
-    - email: string
-    - telefone: string
-    - id_usuario: int
-    + salvar(): void
-    + listarFornecedores(id_usuario: int): List<Fornecedor>
-    + excluirFornecedor(id_user, id_forn): void
-    + atualizar(...): void
+    - id, nomeEmpresa, cnpj: ...
+    - email, telefone, id_usuario: ...
+    + salvar(): bool
+    + listarFornecedores(...): List
+    + buscarPorId(...): Fornecedor
+    + atualizar(...): bool
+    + excluirFornecedor(...): bool
 }
 
 class Categoria {
-    - id: int
-    - nome: string
-    - id_usuario: int
-    + salvar(): void
-    + listarCategorias(id_usuario: int): List<Categoria>
-    + excluirCategoria(id_user, id_cat): void
-    + atualizar(...): void
+    - id, nome, id_usuario: ...
+    + salvar(): bool
+    + listarCategorias(...): List
+    + buscarPorIdCategoria(...): Categoria
+    + atualizar(...): bool
+    + excluirCategoria(...): bool
 }
 
 class Movimentacao {
-    - id: int
-    - tipo: Enum ['entrada', 'saida']
-    - quantidade: int
-    - data: DateTime
-    - motivo: string
-    - id_produto: int
-    - id_usuario: int
-    + registrar(): void
-    + listarPorUsuario(id_usuario: int): List<Movimentacao>
+    - id, tipo, quantidade: ...
+    - data, motivo: ...
+    - id_produto, id_usuario: int
+    + registrar(): bool
+    + listarPorUsuario(...): List
 }
 
-' --- Relacionamentos ---
+' ==========================================
+' RELACIONAMENTOS E DEPENDÊNCIAS
+' ==========================================
 
-' Admin gerencia Clientes
-Administrador "1" .right.> "*" Cliente : gerencia >
+' 1. Herança (É um...)
+Usuario <|-- Administrador
+Usuario <|-- Cliente
 
-' Cliente possui seus dados (Multi-tenancy / Isolamento)
+' 2. Dependência de Infraestrutura (Todos usam Conexao para operar no BD)
+' Isso reflete o require_once 'Conexao.php' e Conexao::Conectar()
+Usuario ..> Conexao
+Relatorio ..> Conexao
+Produto ..> Conexao
+Fornecedor ..> Conexao
+Categoria ..> Conexao
+Movimentacao ..> Conexao
+
+' 3. Associações de Negócio
+Administrador "1" ..> "*" Cliente : gerencia >
+
+' Composição/Agregação (Cliente é o dono dos dados - Multi Tenancy)
 Cliente "1" -- "*" Produto : possui >
 Cliente "1" -- "*" Fornecedor : possui >
 Cliente "1" -- "*" Categoria : possui >
-
-' Relação de autoria da movimentação
 Cliente "1" -- "*" Movimentacao : registra >
 
-' Relacionamentos do Produto
-' 0..1 significa que o fornecedor/categoria pode ser nulo (se for deletado)
-Produto "*" -- "0..1" Fornecedor : fornecido por >
-Produto "*" -- "0..1" Categoria : pertence a >
-
-' Composição: Movimentação só existe se houver produto
-Produto "1" *-- "*" Movimentacao : histórico >
-
+' Relacionamentos entre tabelas (Foreign Keys no código)
+Produto "*" --> "0..1" Fornecedor : fornecido por
+Produto "*" --> "0..1" Categoria : categorizado em
+Produto "1" *-- "*" Movimentacao : possui histórico de
 @enduml
