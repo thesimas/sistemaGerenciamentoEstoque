@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>📦 Sistema de Gerenciamento de Estoque</h1>
+  <h1>📦 Protótipo - Sistema de Gerenciamento de Estoque</h1>
   <p>
     Um sistema web desenvolvido em <strong>PHP Puro</strong>, focado na aplicação prática de Engenharia de Software.
   </p>
@@ -30,11 +30,12 @@ Este projeto foi desenvolvido com forte ênfase em padrões de projeto e boas pr
 * **POO (Programação Orientada a Objetos):** Todo o sistema é baseada em Classes, Objetos, Herança (ex: `Usuario` -> `Cliente`) e Encapsulamento.
 * **Padrão MVC (Model-View-Controller):** Separação clara entre a lógica de negócios (Model), a interface visual (View) e o controle de fluxo (Controller), facilitando a manutenção e escalabilidade.
 * **Isolamento de Dados (Multi-Tenancy):** Implementação de uma arquitetura onde cada usuário vê **apenas** os seus próprios dados (Produtos, Fornecedores e Categorias), mesmo compartilhando o mesmo banco de dados.
+* **Service Layer (Camada de Serviço):** Utilização de classes especializadas (ex: `Relatorio`) para processamento de dados complexos e geração de gráficos, separando a lógica de consulta da lógica de entidade.
 
 ### 📐 Diagrama de Classes
 
 <div align="center">
-  <img src="Diagrama de classe PROJETO ESTOQUE.png" alt="Diagrama de Classes do Sistema" width="800px">
+  <img src="DiagramaDeClasse.png" alt="Diagrama de Classes do Sistema" width="800px">
   <br>
   <i>Estrutura de classes e relacionamentos do sistema.</i>
 </div>
@@ -52,6 +53,10 @@ O cliente tem acesso a um **Dashboard** intuitivo para gerenciar seu negócio:
 * **Gestão de Fornecedores:** Manter base de dados de parceiros.
 * **Movimentação de Estoque:** Registrar entradas e saídas de mercadoria (atualiza saldo automaticamente).
 * **Alertas Visuais:** Indicação visual na lista quando um produto atinge o estoque mínimo.
+* **Relatórios Gerenciais (Novo):** * **Financeiro:** Visualização do valor total investido em estoque.
+    * **Histórico:** Extrato detalhado de movimentações por período.
+    * **Ranking:** Gráficos interativos (Barras) dos produtos com maior saída/venda.
+    * **Exportação:** Funcionalidade de impressão otimizada (simulação de PDF).
 * **Meu Perfil:** Alteração de dados cadastrais e senha.
 
 ### 🛡️ Perfil: Administrador (Dono)
@@ -62,11 +67,12 @@ O cliente tem acesso a um **Dashboard** intuitivo para gerenciar seu negócio:
 
 ## 💻 Tecnologias Utilizadas
 
-O projeto foi construído sem o uso de frameworks, a ideia é praticar as operações de CRUD utilizando uma linguagem acessível como o PHP:
+O projeto foi construído sem o uso de frameworks backend, a ideia é praticar as operações de CRUD utilizando uma linguagem acessível como o PHP:
 
 * **Back-end:** PHP 8+ (Puro/Nativo).
 * **Banco de Dados:** MySQL (Uso de PDO para segurança).
 * **Front-end:** HTML5 e CSS3 (Design responsivo e limpo).
+* **Bibliotecas JS:** Chart.js (para geração de gráficos dinâmicos).
 * **Servidor:** Apache (via XAMPP).
 
 ---
