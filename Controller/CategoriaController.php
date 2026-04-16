@@ -74,8 +74,8 @@
                 $id_usuario = $_SESSION['id'];
             }
 
-            $categoriaExistente = new Categoria(null, null, null);
-            $categoriaExistente->buscarPorIdCategoria($id_categoria, $id_usuario);
+            $dadosCategoria = new Categoria(null, null, null);
+            $dadosCategoria -> buscarPorIdCategoria($id_categoria, $id_usuario);
             
             require_once __DIR__ . '/../View/Categoria/EditarCategoria.php';
         }
@@ -115,7 +115,7 @@
             case 'excluirCategoria':
                 $controller->excluirCategoria();
                 break;
-            case 'prepararEdicao':
+            case 'prepararEdicaoCategoria':
                 $controller->prepararEdicaoCategoria();
                 break;
             case 'atualizarFornecedor':

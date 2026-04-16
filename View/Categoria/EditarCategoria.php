@@ -26,10 +26,10 @@
 
         <form action="CategoriaController.php" method="POST">
             <fieldset>
-                <label>Nome da Categoria:</label>
+                <label>Nome da Categoria: </label>
                 <input type="text" name="nome" value="<?php echo $dadosCategoria['nome']; ?>" required>
                 
-                <input type="hidden" name="id" value="<?php echo $dadosCategoria['id']; ?>">
+                <input type="text" name="id" value="<?php echo $dadosCategoria['id']; ?>">
                 <input type="hidden" name="acao" value="atualizarCategoria">
                 
                 <div style="margin-top: 15px;">
