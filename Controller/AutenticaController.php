@@ -5,6 +5,8 @@
         class AutenticaController {
 
             public function logar(){
+                session_start(); 
+                
                 $email = $_POST['email'];
                 $senha = $_POST['senha'];
 
@@ -13,8 +15,7 @@
                 $dadosUsuario = Usuario::verificaLogin($email, $senha);
 
                 if($dadosUsuario){
-                    session_start();
-
+                
                     $_SESSION['id'] = $dadosUsuario['id'];
                     $_SESSION['nome'] = $dadosUsuario['nome'];
                     $_SESSION['email'] = $dadosUsuario['email'];
@@ -33,8 +34,8 @@
                     header("Location: " . $endereco);
                     exit();
                 } else {
-                    echo "<p>Login ou senha incorretos. Tente novamente.</p>"; // Corrigir esse echo, pois ele irá direcionar para uma página em branco. 
-                    header("Refresh: 3");
+                    $_SESSION['erro_login'] = "Email ou senha inválidos.";
+                    header("Location: ../View/Login.php");
                     exit();
                 }
             }
