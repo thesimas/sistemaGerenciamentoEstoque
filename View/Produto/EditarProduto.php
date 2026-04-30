@@ -50,20 +50,20 @@
 
                 <label>Categoria:</label>
                 <select name="id_categoria" required>
-                    <?php foreach($listaCategorias as $cat): ?>
-                        <?php $selected = ($cat['id'] == $dadosProduto['id_categoria']) ? 'selected' : ''; ?>
-                        <option value="<?php echo $cat['id']; ?>" <?php echo $selected; ?>>
-                            <?php echo $cat['nome']; ?>
+                    <?php foreach($listaCategorias as $categoria): ?>
+                        <?php $selected = ($categoria['id'] == $dadosProduto['id_categoria']) ? 'selected' : ''; ?>
+                        <option value="<?php echo $categoria['id']; ?>" <?php echo $selected; ?>>
+                            <?php echo $categoria['nome']; ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
 
                 <label>Fornecedor:</label>
                 <select name="id_fornecedor" required>
-                    <?php foreach($listaFornecedores as $forn): ?>
-                        <?php $selected = ($forn['id'] == $dadosProduto['id_fornecedor']) ? 'selected' : ''; ?>
-                        <option value="<?php echo $forn['id']; ?>" <?php echo $selected; ?>>
-                            <?php echo $forn['nome_empresa']; ?>
+                    <?php foreach($listaFornecedores as $fornecedor): ?>
+                        <?php $selected = ($fornecedor['id'] == $dadosProduto['id_fornecedor']) ? 'selected' : ''; ?>
+                        <option value="<?php echo $fornecedor['id']; ?>" <?php echo $selected; ?>>
+                            <?php echo $fornecedor['nome_empresa']; ?>
                         </option>
                     <?php endforeach; ?>
                 </select>

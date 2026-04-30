@@ -29,7 +29,7 @@
                 <label>Nome da Categoria: </label>
                 <input type="text" name="nome" value="<?php echo $dadosCategoria['nome']; ?>" required>
                 
-                <input type="text" name="id" value="<?php echo $dadosCategoria['id']; ?>">
+                <input type="hidden" name="id_categoria" value="<?php echo $dadosCategoria['id']; ?>">
                 <input type="hidden" name="acao" value="atualizarCategoria">
                 
                 <div style="margin-top: 15px;">

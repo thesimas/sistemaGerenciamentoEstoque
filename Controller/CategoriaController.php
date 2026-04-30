@@ -74,8 +74,8 @@
                 $id_usuario = $_SESSION['id'];
             }
 
-            $dadosCategoria = new Categoria(null, null, null);
-            $dadosCategoria -> buscarPorIdCategoria($id_categoria, $id_usuario);
+            $categoria = new Categoria(null, null, null);
+            $dadosCategoria = $categoria->buscarPorIdCategoria($id_categoria, $id_usuario);
             
             require_once __DIR__ . '/../View/Categoria/EditarCategoria.php';
         }
@@ -93,7 +93,7 @@
             $nome = $_POST['nome'];
 
             $categoria = new Categoria(null, null, null);
-            $categoria->atualizar($id_categoria, $nome, $id_usuario);
+            $categoria->atualizar($id_categoria, $id_usuario, $nome);
 
             header("Location: ../Controller/CategoriaController.php?acao=listarCategorias");
             exit();

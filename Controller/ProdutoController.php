@@ -237,8 +237,5 @@
                 $controller->listarProdutos();
                 break;
         }
-    }else{
-        $controller = new ProdutoController();
-        $controller->listarProdutos();
     }
 ?>
