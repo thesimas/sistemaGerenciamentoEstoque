@@ -98,7 +98,7 @@
                 <div class="menu-title">Relatórios</div>
             </a>
 
-            <a href="#" onclick="alert('Em breve!')" class="menu-card" style="opacity: 0.7;">
+            <a href="../Controller/ClienteController.php?acao=perfil" class="menu-card">
                 <div class="menu-icon">👤</div>
                 <div class="menu-title">Meu Perfil</div>
             </a>
