@@ -18,15 +18,17 @@
         public static function verificaLogin($email, $senha){
             $conexao = Conexao::Conectar();
 
-            $consultaSQL = "SELECT * FROM usuarios WHERE email = :email AND senha = :senha";
+            $consultaSQL = "SELECT * FROM usuarios WHERE email = :email";
 
             $declaracao = $conexao->prepare($consultaSQL);
             $declaracao->bindValue(":email", $email);
-            $declaracao->bindValue(":senha", $senha);
             $declaracao->execute();
 
             if($declaracao->rowCount() > 0){
-                return $declaracao-> fetch(PDO::FETCH_ASSOC);
+                $usuario = $declaracao->fetch(PDO::FETCH_ASSOC);
+                if(password_verify($senha, $usuario['senha'])){
+                    return $usuario;
+                }
             }
             return false;
         }

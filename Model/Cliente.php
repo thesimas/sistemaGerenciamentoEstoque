@@ -22,12 +22,15 @@ class Cliente extends Usuario {
 
     public function atualizarPerfil($id, $nome, $email, $senha){
         $conexao = Conexao::Conectar();
+
+        $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
+
         $sql = "UPDATE usuarios SET nome = :nome, email = :email, senha = :senha WHERE id = :id AND tipo = 'cliente'";
         $stmt = $conexao->prepare($sql);
         $stmt->bindValue(':id', $id);
         $stmt->bindValue(':nome', $nome);
         $stmt->bindValue(':email', $email);
-        $stmt->bindValue(':senha', $senha);
+        $stmt->bindValue(':senha', $senhaHash);
 
         return $stmt->execute();
     }
