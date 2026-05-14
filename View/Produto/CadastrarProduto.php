@@ -8,7 +8,14 @@
 <body>
     <nav>
         <div class="nav-brand">
-            <span class="company-name">🏢 <?php echo $_SESSION['nome']; ?></span>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <?php if($_SESSION['foto_perfil']): ?>
+                    <img src="../View/Assets/Imagens/Uploads/<?php echo $_SESSION['foto_perfil']; ?>" alt="Foto de Perfil" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                <?php else: ?>
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background-color: #ddd; display: flex; align-items: center; justify-content: center;">👤</div>
+                <?php endif; ?>
+                <span class="company-name"><?php echo $_SESSION['nome']; ?></span>
+            </div>
         </div>
         <div class="nav-links">
             <a href="ClienteController.php?acao=dashboard">🏠 Menu</a>
