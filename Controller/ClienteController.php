@@ -28,6 +28,12 @@
             $dadosCliente = $cliente->buscarPorId($_SESSION['id']);
             $_SESSION['nome'] = $dadosCliente['nome']; 
             $_SESSION['email'] = $dadosCliente['email']; 
+            $_SESSION['foto_perfil'] = $dadosCliente['foto_perfil']; 
+            if($dadosCliente['foto_perfil']){
+                $_SESSION['foto_perfil'] = $dadosCliente['foto_perfil'];
+            } else {
+                $_SESSION['foto_perfil'] = null; 
+            }
 
             require_once __DIR__ . '/../View/Cliente/Perfil.php';
         }
@@ -58,9 +64,30 @@
             $nome = $_POST['nome'];
             $email = $_POST['email'];
             $senha = $_POST['senha'];
+            $fotoPerfil = $_FILES['foto_perfil'];
+
+            if($fotoPerfil['error'] === UPLOAD_ERR_OK){
+                $extensao = strtolower(pathinfo($fotoPerfil['name'], PATHINFO_EXTENSION));
+                $nomeFoto = uniqid('foto_perfil_') . '.' . $extensao;
+                $diretorioDestino = __DIR__ . '/../View/Assets/Imagens/Uploads/';
+
+                if(!is_dir($diretorioDestino)){
+                    mkdir($diretorioDestino, 0755, true);
+                }
+
+                $caminhoCompleto = $diretorioDestino . $nomeFoto;
+
+                if(move_uploaded_file($fotoPerfil['tmp_name'], $caminhoCompleto)){
+                    $fotoPerfil['name'] = $nomeFoto;
+                } else {
+                    $fotoPerfil['name'] = null;
+                }
+            } else {
+                $fotoPerfil['name'] = null;
+            }
 
             $cliente = new Cliente(null, null, null, null);
-            $cliente->atualizarPerfil($id, $nome, $email, $senha);
+            $cliente->atualizarPerfil($id, $nome, $email, $senha, $fotoPerfil);
 
             header("Location: ../Controller/ClienteController.php?acao=perfil");
             exit();
