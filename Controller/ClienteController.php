@@ -10,6 +10,17 @@
                 header("Location: ../index.php"); 
                 exit(); 
             }
+
+            $cliente = new Cliente(null, null, null, null);
+            $dadosCliente = $cliente->buscarPorId($_SESSION["id"]);
+            $_SESSION['nome'] = $dadosCliente['nome']; 
+            $_SESSION['email'] = $dadosCliente['email']; 
+            $_SESSION['foto_perfil'] = $dadosCliente['foto_perfil']; 
+            if($dadosCliente['foto_perfil']){
+                $_SESSION['foto_perfil'] = $dadosCliente['foto_perfil'];
+            } else {
+                $_SESSION['foto_perfil'] = null; 
+            }
             
             require_once __DIR__ . '/../View/Cliente/Dashboard.php';
         }
