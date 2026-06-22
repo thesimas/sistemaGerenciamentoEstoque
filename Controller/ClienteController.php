@@ -104,25 +104,6 @@
             exit();
         }
 
-        public function configuracoes(){
-
-            if(!isset($_SESSION['id']) || $_SESSION['tipo'] != 'cliente'){
-                header("Location: ../index.php");
-                exit();
-            }
-
-            echo "<h1>Página de Configurações em construção...</h1>";
-        }
-
-        public function relatorios(){
-
-            if(!isset($_SESSION['id']) || $_SESSION['tipo'] != 'cliente'){
-                header("Location: ../index.php");
-                exit();
-            }
-            
-            echo "<h1>Página de Configurações em construção...</h1>";
-        }
     }
 
     if(isset($_REQUEST['acao'])){
@@ -140,11 +121,8 @@
             case 'atualizarPerfil':
                 $controller->atualizarPerfil();
                 break;
-            case 'configuracoes':
-                $controller->configuracoes();
-                break;
-            case 'relatorios':
-                $controller -> relatorios();
+            default:
+                $controller->dashboard();
                 break;
         }
     }

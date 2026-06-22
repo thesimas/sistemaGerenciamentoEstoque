@@ -15,7 +15,7 @@ CREATE TABLE usuarios (
     foto_perfil VARCHAR(255),
     tipo ENUM('admin', 'cliente') DEFAULT 'cliente',
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+)engine = InnoDb;;
 
 -- Tabela de Categorias
 CREATE TABLE categorias (
@@ -23,7 +23,7 @@ CREATE TABLE categorias (
     nome VARCHAR(50) NOT NULL,
     id_usuario INT NOT NULL,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE
-);
+)engine = InnoDb;;
 
 -- Tabela de Fornecedores
 CREATE TABLE fornecedores (
@@ -38,7 +38,7 @@ CREATE TABLE fornecedores (
     observacoes TEXT,
     id_usuario INT NOT NULL,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE
-);
+)engine = InnoDb;
 
 -- Tabela de Produtos
 -- AJUSTE IMPORTANTE: id_fornecedor aceita NULL e tem ON DELETE SET NULL
@@ -51,14 +51,14 @@ CREATE TABLE produtos (
     quantidade INT DEFAULT 0,
     estoque_minimo INT DEFAULT 5,
     
-    id_categoria INT,
+    id_categoria INT NULL,
     id_fornecedor INT NULL, -- Pode ficar vazio se o fornecedor for excluído
     id_usuario INT NOT NULL,
     
     FOREIGN KEY (id_categoria) REFERENCES categorias(id) ON DELETE SET NULL,
     FOREIGN KEY (id_fornecedor) REFERENCES fornecedores(id) ON DELETE SET NULL,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE
-);
+)engine = InnoDb;
 
 -- Tabela de Movimentações
 CREATE TABLE movimentacoes (
@@ -73,7 +73,14 @@ CREATE TABLE movimentacoes (
     
     FOREIGN KEY (id_produto) REFERENCES produtos(id) ON DELETE CASCADE,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE
-);
+)engine = InnoDb;
+
+CREATE TABLE configuracoes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario int,
+    
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE
+)engine = InnoDb;
 
 -- ========================================================
 -- 2. POVOAMENTO DE DADOS (DML) - CENÁRIO REAL
