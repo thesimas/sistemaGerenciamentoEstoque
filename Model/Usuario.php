@@ -1,47 +1,61 @@
 <?php
-    require_once __DIR__ . '/../Config/Conexao.php';
     abstract class Usuario {
 
         protected $id;
         protected $nome;
         protected $email;
         protected $senha;
+        protected $fotoPerfil;
 
-        public function __construct($nome, $email, $senha){
+        public function __construct($nome, $email, $senha, $fotoPerfil = null){
             $this->nome = $nome;
             $this->email = $email;
             $this->senha = $senha;
+            $this->fotoPerfil = $fotoPerfil;
         }
 
-        abstract public function enderecoPaginaInicial(); // Esse método abstrado vai ser implementado nas classes filhas.
+        // Esse método abstrato vai ser implementado nas classes filhas.
+        abstract public function enderecoPaginaInicial();
 
-        public static function verificaLogin($email, $senha){
-            $conexao = Conexao::Conectar();
-
-            $consultaSQL = "SELECT * FROM usuarios WHERE email = :email";
-
-            $declaracao = $conexao->prepare($consultaSQL);
-            $declaracao->bindValue(":email", $email);
-            $declaracao->execute();
-
-            if($declaracao->rowCount() > 0){
-                $usuario = $declaracao->fetch(PDO::FETCH_ASSOC);
-                if(password_verify($senha, $usuario['senha'])){
-                    return $usuario;
-                }
-            }
-            return false;
+        public function getId(){
+            return $this->id;
         }
 
-        public function getId(){ 
-            return $this->id; 
-        }
-        public function getNome(){ 
-            return $this->nome; 
-        }
-        public function getEmail(){ 
-            return $this->email; 
+        public function setId($id){
+            $this->id = $id;
         }
 
+        public function getNome(){
+            return $this->nome;
+        }
+
+        public function setNome($nome){
+            $this->nome = $nome;
+        }
+
+        public function getEmail(){
+            return $this->email;
+        }
+
+        public function setEmail($email){
+            $this->email = $email;
+        }
+
+        // Necessário para a DAO conseguir gerar o hash / validar login.
+        public function getSenha(){
+            return $this->senha;
+        }
+
+        public function setSenha($senha){
+            $this->senha = $senha;
+        }
+
+        public function getFotoPerfil(){
+            return $this->fotoPerfil;
+        }
+
+        public function setFotoPerfil($fotoPerfil){
+            $this->fotoPerfil = $fotoPerfil;
+        }
     }
 ?>
