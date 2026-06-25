@@ -1,107 +1,111 @@
 <?php
     require_once __DIR__ . '/../Model/Categoria.php';
+    require_once __DIR__ . '/../Model/Cliente.php';
+    require_once __DIR__ . '/../Model/DAO/CategoriaDAO.php';
 
     class CategoriaController {
 
-        // Esse método irá apenas chamar a VIEW CADASTROCategoria
-        public function prepararCadastroCategoria(){
+        private CategoriaDAO $categoriaDAO;
+
+        public function __construct() {
+            $this->categoriaDAO = new CategoriaDAO();
+        }
+
+        public function prepararCadastroCategoria() {
             session_start();
-            if(!isset($_SESSION['id'])){ header("Location: ../index.php"); exit(); }
+            if(!isset($_SESSION['id'])) { header("Location: ../index.php"); exit(); }
             
             require_once __DIR__ . '/../View/Categoria/CadastrarCategoria.php';
         }
 
-        public function salvarCategoria(){
+        public function salvarCategoria() {
             session_start();
+            if(!isset($_SESSION['id'])) { header("Location: ../index.php"); exit(); }
 
-            if(!isset($_SESSION['id'])){
-                header("Location: ../index.php");
-                exit();
-            }
+            $nome = trim($_POST['nome']);
+            $id_usuario = (int)$_SESSION['id'];
 
-            $nome = $_POST['nome'];
-            $id_usuario = $_SESSION['id'];
+            $usuarioTenant = new Cliente(null, null, null, null);
+            $usuarioTenant->setId($id_usuario);
 
-            $categoria = new Categoria(null, $nome, $id_usuario);
-            $categoria->salvar();
+            $novaCategoria = new Categoria(null, $nome, $usuarioTenant);
+            $this->categoriaDAO->inserir($novaCategoria);
 
-            header("Location: ../Controller/CategoriaController.php?acao=listarCategorias");
+            header("Location: ../Controller/CategoriaController.php?acao=listarCategorias&sucesso=" . urlencode("Categoria cadastrada com sucesso!"));
             exit();
         }
 
-        public function listarCategorias(){
+        public function listarCategorias() {
             session_start();
+            if(!isset($_SESSION['id'])) { header("Location: ../index.php"); exit(); }
 
-            if(!isset($_SESSION['id'])){
-                header("Location: ../index.php");
-                exit();
-            }
-            $categoria = new Categoria(null, null, null);
-            
-            $listaCategorias = $categoria->listarCategorias($_SESSION['id']);
+            // Agora recebemos um array de OBJETOS Categoria
+            $listaCategorias = $this->categoriaDAO->listarPorUsuario($_SESSION['id']);
 
             require_once __DIR__ . '/../View/Categoria/ListarCategoria.php';
         }
 
-        public function excluirCategoria(){
+        public function prepararEdicaoCategoria() {
             session_start();
+            if(!isset($_SESSION['id'])) { header("Location: ../index.php"); exit(); }
 
-            if(!isset($_SESSION['id'])){
-                header("Location: ../index.php");
-                exit();
-            }
+            $id_categoria = (int)$_GET['id_categoria'];
+            $id_usuario = (int)$_SESSION['id'];
 
-            $id_categoria = $_GET['id_categoria'];
-            $id_usuario = $_SESSION['id'];
-
-            $categoria = new Categoria(null, null, null);
-            $categoria->excluirCategoria($id_usuario, $id_categoria);
-
-            header("Location: ../Controller/CategoriaController.php?acao=listarCategorias");
-            exit();
-        }
-
-        public function prepararEdicaoCategoria(){
-            session_start();
-
-            if(!isset($_SESSION['id'])){
-                header("Location: ../index.php");
-                exit();
-            }
-
-            if(isset($_GET['id_categoria'])){
-                $id_categoria = $_GET['id_categoria'];
-                $id_usuario = $_SESSION['id'];
-            }
-
-            $categoria = new Categoria(null, null, null);
-            $dadosCategoria = $categoria->buscarPorIdCategoria($id_categoria, $id_usuario);
+            // O DAO retorna um OBJETO Categoria completo
+            $categoria = $this->categoriaDAO->buscarPorId($id_categoria, $id_usuario);
             
+            if (!$categoria) {
+                header("Location: ../Controller/CategoriaController.php?acao=listarCategorias&erro=" . urlencode("Categoria não encontrada."));
+                exit();
+            }
+
             require_once __DIR__ . '/../View/Categoria/EditarCategoria.php';
         }
 
-        public function atualizarCategoria(){
+        public function atualizarCategoria() {
             session_start();
+            if(!isset($_SESSION['id'])) { header("Location: ../index.php"); exit(); }
 
-            if(!isset($_SESSION['id'])){
-                header("Location: ../index.php");
-                exit();
+            $id_categoria = (int)$_POST['id_categoria'];
+            $id_usuario = (int)$_SESSION['id'];
+            $nome = trim($_POST['nome']);
+
+            $usuarioTenant = new Cliente(null, null, null, null);
+            $usuarioTenant->setId($id_usuario);
+
+            // Montamos o objeto para atualizar
+            $categoria = new Categoria($id_categoria, $nome, $usuarioTenant);
+            $this->categoriaDAO->atualizar($categoria);
+
+            header("Location: ../Controller/CategoriaController.php?acao=listarCategorias&sucesso=" . urlencode("Categoria atualizada com sucesso!"));
+            exit();
+        }
+
+        public function excluirCategoria() {
+            session_start();
+            if(!isset($_SESSION['id'])) { header("Location: ../index.php"); exit(); }
+
+            $id_categoria = (int)$_GET['id_categoria'];
+            $id_usuario = (int)$_SESSION['id'];
+
+            try {
+                $this->categoriaDAO->excluir($id_categoria, $id_usuario);
+                header("Location: ../Controller/CategoriaController.php?acao=listarCategorias&sucesso=" . urlencode("Categoria excluída com sucesso!"));
+            } catch (PDOException $e) {
+                // Captura restrição de chave estrangeira (RESTRICT) do banco de dados
+                if ($e->getCode() == 23000) {
+                    $mensagem = "Não é possível excluir esta categoria pois existem produtos vinculados a ela.";
+                } else {
+                    $mensagem = "Erro interno ao tentar excluir a categoria.";
+                }
+                header("Location: ../Controller/CategoriaController.php?acao=listarCategorias&erro=" . urlencode($mensagem));
             }
-
-            $id_categoria = $_POST['id_categoria'];
-            $id_usuario = $_SESSION['id'];
-            $nome = $_POST['nome'];
-
-            $categoria = new Categoria(null, null, null);
-            $categoria->atualizar($id_categoria, $id_usuario, $nome);
-
-            header("Location: ../Controller/CategoriaController.php?acao=listarCategorias");
             exit();
         }
     }
 
-    // Roteamento
-
+    // Roteamento estável
     if(isset($_REQUEST['acao'])){
         $controller = new CategoriaController();
 
@@ -118,7 +122,7 @@
             case 'prepararEdicaoCategoria':
                 $controller->prepararEdicaoCategoria();
                 break;
-            case 'atualizarFornecedor':
+            case 'atualizarCategoria':
                 $controller->atualizarCategoria();
                 break;
             case 'prepararCadastroCategoria':

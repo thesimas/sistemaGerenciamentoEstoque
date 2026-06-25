@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../Model/Relatorio.php';
+require_once __DIR__ . '/../Model/DAO/RelatorioDAO.php';
 
 class RelatorioController {
 
@@ -14,7 +14,7 @@ class RelatorioController {
         session_start();
         if(!isset($_SESSION['id'])){ header("Location: ../index.php"); exit(); }
 
-        $relatorio = new Relatorio();
+        $relatorio = new RelatorioDAO();
         
         $listaEstoque = $relatorio->gerarTotalEstoque($_SESSION['id']);
 
@@ -29,7 +29,7 @@ class RelatorioController {
         $inicio = $_POST['data_inicio'];
         $fim    = $_POST['data_fim'];
 
-        $relatorio = new Relatorio();
+        $relatorio = new RelatorioDAO();
         
         $listaMovimentacoes = $relatorio->gerarHistoricoMovimentacoesPorData($inicio, $fim, $_SESSION['id']);
 
@@ -42,7 +42,7 @@ class RelatorioController {
 
         $tipo = $_POST['tipo']; 
 
-        $relatorio = new Relatorio();
+        $relatorio = new RelatorioDAO();
         
         $listaRanking = $relatorio->geraProdutosMaisVendidos($_SESSION['id'], $tipo);
 

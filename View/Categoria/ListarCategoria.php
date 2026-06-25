@@ -1,3 +1,7 @@
+<?php
+require_once __DIR__ . '/../../Model/Categoria.php'; // Apresenta a classe para a IDE
+/** @var Categoria[] $listaCategorias */
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -47,15 +51,15 @@
             </thead>
             <tbody>
                 <?php if(isset($listaCategorias) && count($listaCategorias) > 0): ?>
-                    <?php foreach($listaCategorias as $cat): ?>
+                    <?php foreach($listaCategorias as $categoria): ?>
                         <tr>
-                            <td style="width: 10%;"><?php echo $cat['id']; ?></td>
-                            <td><?php echo $cat['nome']; ?></td>
+                            <td style="width: 10%;"><?php echo $categoria->getId(); ?></td>
+                            <td><?php echo $categoria->getNome(); ?></td>
                             <td style="width: 20%;">
-                                <a href="CategoriaController.php?acao=prepararEdicaoCategoria&id_categoria=<?php echo $cat['id']; ?>"
+                                <a href="CategoriaController.php?acao=prepararEdicaoCategoria&id_categoria=<?php echo $categoria->getId(); ?>"
                                    class="btn-acao btn-editar">Editar</a>
                                 
-                                <a href="CategoriaController.php?acao=excluirCategoria&id_categoria=<?php echo $cat['id']; ?>" 
+                                <a href="CategoriaController.php?acao=excluirCategoria&id_categoria=<?php echo $categoria->getId(); ?>" 
                                    onclick="return confirm('Tem certeza?')" 
                                    class="btn-acao btn-excluir">Excluir</a>
                             </td>

@@ -17,7 +17,6 @@
             $declaracao->bindValue(':quantidade', $movimentacao->getQuantidade());
             $declaracao->bindValue(':data', $movimentacao->getData());
             $declaracao->bindValue(':motivo', $movimentacao->getMotivo());
-            // Extraímos os IDs de dentro dos objetos embutidos na Movimentacao:
             $declaracao->bindValue(':id_produto', $movimentacao->getProduto()->getId());
             $declaracao->bindValue(':id_usuario', $movimentacao->getUsuario()->getId());
 

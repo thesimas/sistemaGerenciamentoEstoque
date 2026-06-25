@@ -118,13 +118,6 @@
             return $declaracao->execute();
         }
 
-        /**
-         * Monta o objeto Produto completo a partir de uma linha do banco.
-         * Os objetos relacionados (usuário/fornecedor/categoria) são
-         * recriados aqui apenas com o ID, no mesmo espírito do "usuarioTenant"
-         * usado na CategoriaDAO — eles servem como referência, não como
-         * cópia completa do registro relacionado.
-         */
         private function montarProduto(array $linha, $id_usuario): Produto {
             $usuarioTenant = new Cliente(null, null, null, null);
             $usuarioTenant->setId($id_usuario);

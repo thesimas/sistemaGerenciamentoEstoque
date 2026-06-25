@@ -1,3 +1,7 @@
+<?php
+require_once __DIR__ . '/../../Model/Fornecedor.php';
+/** @var Fornecedor $fornecedor */
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -34,18 +38,18 @@
         <form action="FornecedorController.php" method="POST">
             <fieldset>
                 <label>Nome da Empresa:</label>
-                <input type="text" name="nome_empresa" value="<?php echo $dadosFornecedor['nome_empresa']; ?>" required>
+                <input type="text" name="nome_empresa" value="<?php echo $fornecedor->getNomeEmpresa(); ?>" required>
 
                 <label>CNPJ:</label>
-                <input type="text" name="cnpj" value="<?php echo $dadosFornecedor['cnpj']; ?>">
+                <input type="text" name="cnpj" value="<?php echo $fornecedor->getCnpj(); ?>">
 
                 <label>Email:</label>
-                <input type="email" name="email" value="<?php echo $dadosFornecedor['email']; ?>" required>
+                <input type="email" name="email" value="<?php echo $fornecedor->getEmail(); ?>" required>
 
                 <label>Telefone:</label>
-                <input type="text" name="telefone" value="<?php echo $dadosFornecedor['telefone']; ?>">
+                <input type="text" name="telefone" value="<?php echo $fornecedor->getTelefone(); ?>">
 
-                <input type="hidden" name="id" value="<?php echo $dadosFornecedor['id']; ?>">
+                <input type="hidden" name="id" value="<?php echo $fornecedor->getId(); ?>">
                 <input type="hidden" name="acao" value="atualizarFornecedor">
 
                 <div style="margin-top: 15px;">

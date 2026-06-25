@@ -16,7 +16,6 @@
             $stmt->bindValue(':cnpj', $fornecedor->getCnpj());
             $stmt->bindValue(':email', $fornecedor->getEmail());
             $stmt->bindValue(':telefone', $fornecedor->getTelefone());
-            // Extraímos o ID de dentro do objeto Usuario embutido no Fornecedor:
             $stmt->bindValue(':id_usuario', $fornecedor->getUsuario()->getId());
 
             $stmt->execute();

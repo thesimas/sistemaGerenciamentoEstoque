@@ -1,8 +1,10 @@
 <?php
-    require_once __DIR__ . '/../Model/Produto.php';
-    require_once __DIR__ . '/../Model/Movimentacao.php';
+    require_once __DIR__ . '/../Model/DAO/ProdutoDAO.php';
     require_once __DIR__ . '/../Model/Categoria.php';
     require_once __DIR__ . '/../Model/Fornecedor.php';
+    require_once __DIR__ . '/../Model/Movimentacao.php';
+    require_once __DIR__ . '/../Model/DAO/CategoriaDAO.php';
+    require_once __DIR__ . '/../Model/DAO/FornecedorDAO.php';
 
     class ProdutoController {
         
@@ -13,8 +15,8 @@
                 header("Location: ../index.php");
                 exit();
             }
-            $produto = new Produto(null, null, null, null, null, null, null, null, null);
-            $listaDeprodutos = $produto->listarPorUsuario($_SESSION['id']);
+            $produtoDao = new ProdutoDAO();
+            $listaDeprodutos = $produtoDao->listarPorUsuario($_SESSION['id']);
 
             require_once __DIR__ . '/../View/Produto/ListarProduto.php';
         }
@@ -27,58 +29,52 @@
                 exit();
             }
 
-            $fornecedor = new Fornecedor(null, null, null, null, null);
-            $listaDeFornecedores = $fornecedor->listarFornecedores($_SESSION['id']);
+            $fornecedorDao = new FornecedorDAO();
+            $listaDeFornecedores = $fornecedorDao->listarPorUsuario($_SESSION['id']);
 
-            $categoria = new Categoria(null, null, null);
-            $listaDeCategorias = $categoria->listarCategorias($_SESSION['id']);
+            $categoriaDao = new CategoriaDAO();
+            $listaDeCategorias = $categoriaDao->listarPorUsuario($_SESSION['id']);
 
             require_once __DIR__ . '/../View/Produto/CadastrarProduto.php';
         }
 
-        public function salvarProduto(){
+        public function salvarProduto() {
             session_start();
-
-            if(!isset($_SESSION['id'])){
-                header("Location: ../index.php");
-                exit();
-            }
+            if(!isset($_SESSION['id'])){ header("Location: ../index.php"); exit(); }
 
             $sku = $_POST['sku'];
             $nome = $_POST['nome'];
             $descricao = $_POST['descricao'];
-            $preco = $_POST['preco'];
-            $quantidade = $_POST['quantidade'];
-            $estoqueMinimo = $_POST['estoque_minimo'];
-            $id_usuario = $_SESSION['id'];
-            $id_fornecedor = $_POST['id_fornecedor'];
-            $id_categoria = $_POST['id_categoria'];
-
-            if(empty($sku) || empty($nome) || empty($descricao) || empty($preco) || empty($quantidade) || empty($estoqueMinimo) || empty($id_fornecedor) || empty($id_categoria)){
-                echo "<p>Todos os campos são obrigatórios.</p>"; // Corrigir esse echo, pois ele irá direcionar para uma página em branco. 
-                header("Refresh: 3; URL=../Controller/ProdutoController.php?acao=prepararCadastro");
-                exit();
-            }
-
-            if(!is_numeric($preco) || !is_numeric($quantidade) || !is_numeric($estoqueMinimo)){
-                echo "<p>Os campos preço, quantidade e estoque mínimo devem ser numéricos.</p>"; // Corrigir esse echo, pois ele irá direcionar para uma página em branco. 
-                header("Refresh: 3; URL=../Controller/ProdutoController.php?acao=prepararCadastro");
-                exit();
-            }
-
-            if($preco < 0 || $quantidade < 0 || $estoqueMinimo < 0){
-                echo "<p>Os campos preço, quantidade e estoque mínimo não podem ser negativos.</p>"; // Corrigir esse echo, pois ele irá direcionar para uma página em branco. 
-                header("Refresh: 3; URL=../Controller/ProdutoController.php?acao=prepararCadastro");
-                exit();
-            }
-
-            $produto = new Produto($sku, $nome, $descricao, $preco, $quantidade, $estoqueMinimo, $id_usuario, $id_fornecedor, $id_categoria);
+            $preco = (float)$_POST['preco'];
+            $quantidade = (int)$_POST['quantidade'];
+            $estoqueMinimo = (int)$_POST['estoque_minimo'];
             
-            $idNovoProduto = $produto->salvar();
+            $id_categoria = $_POST['id_categoria'];
+            $id_fornecedor = $_POST['id_fornecedor'];
+
+            $usuarioTenant = new Cliente(null, null, null, null);
+            $usuarioTenant->setId($_SESSION['id']);
+
+            $categoria = null;
+            if (!empty($id_categoria)) {
+                $categoria = new Categoria($id_categoria, null, $usuarioTenant);
+            }
+
+            $fornecedor = null;
+            if (!empty($id_fornecedor)) {
+                $fornecedor = new Fornecedor(null, null, null, null, $usuarioTenant);
+                $fornecedor->setId($id_fornecedor);
+            }
+
+            $produto = new Produto($sku, $nome, $descricao, $preco, $quantidade, $estoqueMinimo, $usuarioTenant, $fornecedor, $categoria);
+            
+            $produtoDAO = new ProdutoDAO();
+            $produtoDAO->inserir($produto);
 
             if($quantidade > 0){
-                $movimentacao = new Movimentacao('Entrada', $quantidade, date('Y-m-d H:i:s'), "Inserção de Produtos", $idNovoProduto, $_SESSION['id']);
-                $movimentacao->registrar();
+                $movimentacao = new Movimentacao('entrada', $quantidade, date('Y-m-d H:i:s'), "Inserção de Produtos", $produto, $usuarioTenant);
+                $movimentacaoDAO = new MovimentacaoDAO();
+                $movimentacaoDAO->registrar($movimentacao);
             }
 
             header("Location: ../Controller/ProdutoController.php?acao=listarProdutos");
@@ -96,8 +92,8 @@
             if(isset($_GET['id_produto'])){
                 $id = $_GET['id_produto'];
 
-                $produto = new Produto(null, null, null, null, null, null, null, null, null); 
-                $produto->excluirProduto($id, $_SESSION['id']);
+                $produto = new ProdutoDAO();
+                $produto->excluir($id, $_SESSION['id']);
             }
 
             header("Location: ../Controller/ProdutoController.php?acao=listarProdutos");
@@ -125,16 +121,16 @@
                 exit();
             }
 
-            $produtoNoBanco = new Produto(null, null, null, null, null, null, null, null, null);
-            $informacaoProdu = $produtoNoBanco->buscarPorId($id_produto, $id_usuario);
+            $produtoNoBanco = new ProdutoDAO();
+            $informacaoProduto = $produtoNoBanco->buscarPorId($id_produto, $id_usuario);
 
-            if(!$informacaoProdu) {
+            if(!$informacaoProduto) {
                 echo "<p>Produto não encontrado!</p>";
                 header("Refresh: 3; URL=../Controller/ProdutoController.php?acao=movimentar");
                 exit();
             }
 
-            $saldoAtual = (int)$informacaoProdu['quantidade'];
+            $saldoAtual = (int)$informacaoProduto['quantidade'];
 
             if(strtolower($tipo) === "entrada"){
                 $novoSaldo = $saldoAtual + $qtdMovimentada;
@@ -152,7 +148,8 @@
 
             $registrarMovimentacao = new Movimentacao($tipo, $qtdMovimentada, $data, $motivo, $id_produto, $id_usuario);
 
-            $registrarMovimentacao->registrar();
+            $movimentacaoDAO = new MovimentacaoDAO();
+            $movimentacaoDAO->registrar($registrarMovimentacao);
 
             header("Location: ../Controller/ProdutoController.php?acao=listarProdutos");
             exit();
@@ -169,14 +166,14 @@
             $id_produto = $_GET['id_produto'];
             $id_usuario = $_SESSION['id'];
 
-            $produto = new Produto(null, null, null, null, null, null, null, null, null);
+            $produto = new ProdutoDAO();
             $dadosProduto = $produto->buscarPorId($id_produto, $id_usuario);
 
-            $categoria = new Categoria(null, null, null);
-            $listaCategorias = $categoria->listarCategorias($id_usuario);
+            $categoria = new CategoriaDAO();
+            $listaCategorias = $categoria->listarPorUsuario($id_usuario);
 
-            $fornecedor = new Fornecedor(null, null, null, null, null);
-            $listaFornecedores = $fornecedor->listarFornecedores($id_usuario);
+            $fornecedor = new FornecedorDAO();
+            $listaFornecedores = $fornecedor->listarPorUsuario($id_usuario);
 
             require_once __DIR__ . '/../View/Produto/EditarProduto.php';
             
@@ -190,19 +187,28 @@
                 exit();
             }
             
-            $produtoAtualizado = new Produto(null, null, null, null, null, null, null, null, null);
+            $produtoDAO = new ProdutoDAO();
             
-            $produtoAtualizado->atualizar(
-                $_POST['id'], 
-                $_POST['sku'], 
-                $_POST['nome'], 
-                $_POST['descricao'], 
-                $_POST['preco'], 
-                $_POST['estoque_minimo'], 
-                $_POST['id_categoria'], 
-                $_POST['id_fornecedor'], 
-                $_SESSION['id']
-            );
+            $produtoAtualizado = new Produto(null, null, null, null, null, null, null, null, null);
+            $produtoAtualizado->setId($_POST['id']);
+            $produtoAtualizado->setSku($_POST['sku']);
+            $produtoAtualizado->setNome($_POST['nome']);
+            $produtoAtualizado->setDescricao($_POST['descricao']);
+            $produtoAtualizado->setPreco((float)$_POST['preco']);
+            $produtoAtualizado->setEstoqueMinimo((int)$_POST['estoque_minimo']);
+
+            $categoria = new Categoria($_POST['id_categoria'], null, new Cliente(null, null, null, null));
+
+            $fornecedor = new Fornecedor(null, null, null, null, new Cliente(null, null, null, null));
+            $fornecedor->setId($_POST['id_fornecedor']);
+
+            $produtoAtualizado->setCategoria($categoria);
+            $produtoAtualizado->setFornecedor($fornecedor);
+            $cliente = new Cliente(null, null, null, null);
+            $cliente->setId($_SESSION['id']);
+            $produtoAtualizado->setUsuario($cliente);
+
+            $produtoDAO->atualizar($produtoAtualizado);
 
             header("Location: ../Controller/ProdutoController.php?acao=listarProdutos");
             exit();
