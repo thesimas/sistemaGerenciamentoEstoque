@@ -34,11 +34,11 @@
         <form action="ClienteController.php?acao=atualizarPerfil" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="nome">Nome da Empresa:</label>
-                <input type="text" id="nome" name="nome" value="<?php echo $dadosCliente['nome']; ?>" required>
+                <input type="text" id="nome" name="nome" value="<?php echo $dadosCliente->getNome(); ?>" required>
             </div>
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" value="<?php echo $dadosCliente['email']; ?>" required>
+                <input type="email" id="email" name="email" value="<?php echo $dadosCliente->getEmail(); ?>" required>
             </div>
             <div class="form-group">
                 <label for="senha">Senha:</label>
@@ -46,7 +46,7 @@
             </div>
             <div class="form-group">
                 <label for="foto_perfil">Foto de Perfil: </label>
-                <input type="file" id="foto_perfil" name="foto_perfil" value="<?php echo $dadosCliente['foto_perfil']; ?>">
+                <input type="file" id="foto_perfil" name="foto_perfil" value="<?php echo $dadosCliente->getFotoPerfil(); ?>">
             </div>
             <button type="submit" class="btn">Atualizar Perfil</button>
             <button type="button" class="btn" style="background-color: #6c757d;" onclick="window.location.href='ClienteController.php?acao=perfil'">Voltar ao Perfil</button>

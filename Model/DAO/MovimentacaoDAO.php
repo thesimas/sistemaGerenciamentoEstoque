@@ -1,8 +1,8 @@
 <?php
-    require_once __DIR__ . '/../Config/Conexao.php';
-    require_once __DIR__ . '/../Model/Movimentacao.php';
-    require_once __DIR__ . '/../Model/Produto.php';
-    require_once __DIR__ . '/../Model/Cliente.php';
+    require_once __DIR__ . '/../../Config/Conexao.php';
+    require_once __DIR__ . '/../Movimentacao.php';
+    require_once __DIR__ . '/../Produto.php';
+    require_once __DIR__ . '/../Cliente.php';
 
     class MovimentacaoDAO {
 

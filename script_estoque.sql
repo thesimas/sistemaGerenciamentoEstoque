@@ -92,10 +92,10 @@ CREATE TABLE configuracoes (
 -- --------------------------------------------------------
 
 INSERT INTO usuarios (id, nome, email, senha, tipo) VALUES 
-(1, 'Administrador Geral', 'admin@sistema.com', '$2y$10$8W3n8JkM9p.L1vF6zR7uOeGqH5XyZ2A1B3C4D5E6F7G8H9I0J1K2L', 'admin'),
-(2, 'TechZone Eletrônicos', 'tech@cliente.com', '$2y$10$8W3n8JkM9p.L1vF6zR7uOeGqH5XyZ2A1B3C4D5E6F7G8H9I0J1K2L', 'cliente'),
-(3, 'Moda Fashion Store', 'moda@cliente.com', '$2y$10$8W3n8JkM9p.L1vF6zR7uOeGqH5XyZ2A1B3C4D5E6F7G8H9I0J1K2L', 'cliente'),
-(4, 'Mercado Fresco', 'mercado@cliente.com', '$2y$10$8W3n8JkM9p.L1vF6zR7uOeGqH5XyZ2A1B3C4D5E6F7G8H9I0J1K2L', 'cliente');
+(1, 'Administrador Geral', 'admin@sistema.com', '$2y$10$Qz5iJthqYIvavuxGtXvUE.bMj1jZgLvtifPLpznI7EVMoHVLnoLdC', 'admin'),
+(2, 'TechZone Eletrônicos', 'tech@cliente.com', '$2y$10$Qz5iJthqYIvavuxGtXvUE.bMj1jZgLvtifPLpznI7EVMoHVLnoLdC', 'cliente'),
+(3, 'Moda Fashion Store', 'moda@cliente.com', '$2y$10$Qz5iJthqYIvavuxGtXvUE.bMj1jZgLvtifPLpznI7EVMoHVLnoLdC', 'cliente'),
+(4, 'Mercado Fresco', 'mercado@cliente.com', '$2y$10$Qz5iJthqYIvavuxGtXvUE.bMj1jZgLvtifPLpznI7EVMoHVLnoLdC', 'cliente');
 
 
 -- ========================================================

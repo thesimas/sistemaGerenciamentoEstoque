@@ -1,8 +1,8 @@
 <?php
-    require_once __DIR__ . '/../Config/Conexao.php';
-    require_once __DIR__ . '/../Model/Usuario.php';
-    require_once __DIR__ . '/../Model/Cliente.php';
-    require_once __DIR__ . '/../Model/Administrador.php';
+    require_once __DIR__ . '/../../Config/Conexao.php';
+    require_once __DIR__ . '/../Usuario.php';
+    require_once __DIR__ . '/../Cliente.php';
+    require_once __DIR__ . '/../Administrador.php';
 
     class UsuarioDAO {
 

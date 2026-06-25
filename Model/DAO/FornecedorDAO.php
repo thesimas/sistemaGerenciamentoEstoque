@@ -1,7 +1,7 @@
 <?php
-    require_once __DIR__ . '/../Config/Conexao.php';
-    require_once __DIR__ . '/../Model/Fornecedor.php';
-    require_once __DIR__ . '/../Model/Cliente.php';
+    require_once __DIR__ . '/../../Config/Conexao.php';
+    require_once __DIR__ . '/../Fornecedor.php';
+    require_once __DIR__ . '/../Cliente.php';
 
     class FornecedorDAO {
 

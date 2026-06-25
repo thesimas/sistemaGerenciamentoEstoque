@@ -109,11 +109,6 @@
                 <div class="menu-icon">👤</div>
                 <div class="menu-title">Meu Perfil</div>
             </a>
-
-            <a href="../Controller/ConfiguracaoController.php?acao=buscarConfiguracoes" class="menu-card" style="opacity: 0.7;">
-                <div class="menu-icon">⚙️</div>
-                <div class="menu-title">Configurações</div>
-            </a>
         </div>
     </div>
 </body>

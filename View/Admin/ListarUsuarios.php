@@ -37,15 +37,15 @@
                 <?php if(isset($listaUsuarios) && count($listaUsuarios) > 0): ?>
                     <?php foreach($listaUsuarios as $user): ?>
                         <tr>
-                            <td><?php echo $user['id']; ?></td>
+                            <td><?php echo $user->getId(); ?></td>
                             <td>
-                                <strong><?php echo $user['nome']; ?></strong>
+                                <strong><?php echo $user->getNome(); ?></strong>
                             </td>
-                            <td><?php echo $user['email']; ?></td>
+                            <td><?php echo $user->getEmail(); ?></td>
                             <td>
                                 <?php 
-                                    // Pequena lógica visual para diferenciar tipos
-                                    if($user['tipo'] == 'admin'){
+                                    // Diferencia o tipo pela própria classe do objeto, não por uma string solta
+                                    if($user instanceof Administrador){
                                         echo '<span style="color: blue; font-weight: bold;">Administrador</span>';
                                     } else {
                                         echo '<span style="color: green;">Cliente/Operador</span>';
@@ -53,7 +53,7 @@
                                 ?>
                             </td>
                             <td>
-                                <a href="AdminController.php?acao=excluirUsuario&id=<?php echo $user['id']; ?>" 
+                                <a href="AdminController.php?acao=excluirUsuario&id=<?php echo $user->getId(); ?>" 
                                    onclick="return confirm('Tem certeza que deseja excluir este usuário? Todos os dados dele (produtos, fornecedores) serão apagados!')" 
                                    style="color: red; font-weight: bold;">
                                    [Excluir Conta]

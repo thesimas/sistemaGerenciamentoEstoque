@@ -1,7 +1,13 @@
-<?php 
-    require_once __DIR__ . "/../Model/Administrador.php";
+<?php
+    require_once __DIR__ . '/../Model/DAO/UsuarioDAO.php';
 
     class AdminController {
+
+        private UsuarioDAO $usuarioDAO;
+
+        public function __construct() {
+            $this->usuarioDAO = new UsuarioDAO();
+        }
 
         public function listarUsuarios(){
             session_start();
@@ -11,9 +17,8 @@
                 exit();
             }
 
-            $adminModel = new Administrador(null, null, null);
-
-            $listaUsuarios = $adminModel->listarUsuarios($_SESSION['id']);
+            // Agora recebemos um array de OBJETOS Usuario (Cliente ou Administrador)
+            $listaUsuarios = $this->usuarioDAO->listarTodosExceto($_SESSION['id']);
 
             require_once __DIR__ . '/../View/Admin/ListarUsuarios.php';
         }
@@ -28,9 +33,7 @@
 
             $id_usuarioASerExcluido = $_GET['id'];
 
-            $adminModel = new Administrador(null, null, null);
-
-            $adminModel->excluirUsuario($id_usuarioASerExcluido);
+            $this->usuarioDAO->excluir($id_usuarioASerExcluido);
 
             header("Location: AdminController.php?acao=listar");
             exit();

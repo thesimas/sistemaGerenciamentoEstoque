@@ -1,9 +1,9 @@
 <?php
-    require_once __DIR__ . '/../Config/Conexao.php';
-    require_once __DIR__ . '/../Model/Produto.php';
-    require_once __DIR__ . '/../Model/Cliente.php';
-    require_once __DIR__ . '/../Model/Fornecedor.php';
-    require_once __DIR__ . '/../Model/Categoria.php';
+    require_once __DIR__ . '/../../Config/Conexao.php';
+    require_once __DIR__ . '/../Produto.php';
+    require_once __DIR__ . '/../Cliente.php';
+    require_once __DIR__ . '/../Fornecedor.php';
+    require_once __DIR__ . '/../Categoria.php';
 
     class ProdutoDAO {
 

@@ -1,13 +1,28 @@
 <?php
     require_once __DIR__ . '/../Model/DAO/ProdutoDAO.php';
+    require_once __DIR__ . '/../Model/DAO/CategoriaDAO.php';
+    require_once __DIR__ . '/../Model/DAO/FornecedorDAO.php';
+    require_once __DIR__ . '/../Model/DAO/MovimentacaoDAO.php';
+    require_once __DIR__ . '/../Model/Produto.php';
     require_once __DIR__ . '/../Model/Categoria.php';
     require_once __DIR__ . '/../Model/Fornecedor.php';
     require_once __DIR__ . '/../Model/Movimentacao.php';
-    require_once __DIR__ . '/../Model/DAO/CategoriaDAO.php';
-    require_once __DIR__ . '/../Model/DAO/FornecedorDAO.php';
+    require_once __DIR__ . '/../Model/Cliente.php';
 
     class ProdutoController {
-        
+
+        private ProdutoDAO $produtoDAO;
+        private CategoriaDAO $categoriaDAO;
+        private FornecedorDAO $fornecedorDAO;
+        private MovimentacaoDAO $movimentacaoDAO;
+
+        public function __construct() {
+            $this->produtoDAO = new ProdutoDAO();
+            $this->categoriaDAO = new CategoriaDAO();
+            $this->fornecedorDAO = new FornecedorDAO();
+            $this->movimentacaoDAO = new MovimentacaoDAO();
+        }
+
         public function listarProdutos(){
             session_start();
 
@@ -15,8 +30,8 @@
                 header("Location: ../index.php");
                 exit();
             }
-            $produtoDao = new ProdutoDAO();
-            $listaDeprodutos = $produtoDao->listarPorUsuario($_SESSION['id']);
+
+            $listaDeprodutos = $this->produtoDAO->listarPorUsuario($_SESSION['id']);
 
             require_once __DIR__ . '/../View/Produto/ListarProduto.php';
         }
@@ -29,11 +44,8 @@
                 exit();
             }
 
-            $fornecedorDao = new FornecedorDAO();
-            $listaDeFornecedores = $fornecedorDao->listarPorUsuario($_SESSION['id']);
-
-            $categoriaDao = new CategoriaDAO();
-            $listaDeCategorias = $categoriaDao->listarPorUsuario($_SESSION['id']);
+            $listaDeFornecedores = $this->fornecedorDAO->listarPorUsuario($_SESSION['id']);
+            $listaDeCategorias = $this->categoriaDAO->listarPorUsuario($_SESSION['id']);
 
             require_once __DIR__ . '/../View/Produto/CadastrarProduto.php';
         }
@@ -45,36 +57,49 @@
             $sku = $_POST['sku'];
             $nome = $_POST['nome'];
             $descricao = $_POST['descricao'];
-            $preco = (float)$_POST['preco'];
-            $quantidade = (int)$_POST['quantidade'];
-            $estoqueMinimo = (int)$_POST['estoque_minimo'];
-            
+            $preco = $_POST['preco'];
+            $quantidade = $_POST['quantidade'];
+            $estoqueMinimo = $_POST['estoque_minimo'];
             $id_categoria = $_POST['id_categoria'];
             $id_fornecedor = $_POST['id_fornecedor'];
+
+            if(empty($sku) || empty($nome) || empty($descricao) || $preco === '' || $quantidade === '' || $estoqueMinimo === '' || empty($id_fornecedor) || empty($id_categoria)){
+                echo "<p>Todos os campos são obrigatórios.</p>";
+                header("Refresh: 3; URL=../Controller/ProdutoController.php?acao=prepararCadastro");
+                exit();
+            }
+
+            if(!is_numeric($preco) || !is_numeric($quantidade) || !is_numeric($estoqueMinimo)){
+                echo "<p>Os campos preço, quantidade e estoque mínimo devem ser numéricos.</p>";
+                header("Refresh: 3; URL=../Controller/ProdutoController.php?acao=prepararCadastro");
+                exit();
+            }
+
+            if($preco < 0 || $quantidade < 0 || $estoqueMinimo < 0){
+                echo "<p>Os campos preço, quantidade e estoque mínimo não podem ser negativos.</p>";
+                header("Refresh: 3; URL=../Controller/ProdutoController.php?acao=prepararCadastro");
+                exit();
+            }
+
+            $preco = (float)$preco;
+            $quantidade = (int)$quantidade;
+            $estoqueMinimo = (int)$estoqueMinimo;
 
             $usuarioTenant = new Cliente(null, null, null, null);
             $usuarioTenant->setId($_SESSION['id']);
 
-            $categoria = null;
-            if (!empty($id_categoria)) {
-                $categoria = new Categoria($id_categoria, null, $usuarioTenant);
-            }
+            $categoria = new Categoria($id_categoria, null, $usuarioTenant);
 
-            $fornecedor = null;
-            if (!empty($id_fornecedor)) {
-                $fornecedor = new Fornecedor(null, null, null, null, $usuarioTenant);
-                $fornecedor->setId($id_fornecedor);
-            }
+            $fornecedor = new Fornecedor(null, null, null, null, $usuarioTenant);
+            $fornecedor->setId($id_fornecedor);
 
             $produto = new Produto($sku, $nome, $descricao, $preco, $quantidade, $estoqueMinimo, $usuarioTenant, $fornecedor, $categoria);
-            
-            $produtoDAO = new ProdutoDAO();
-            $produtoDAO->inserir($produto);
+
+            $this->produtoDAO->inserir($produto);
 
             if($quantidade > 0){
                 $movimentacao = new Movimentacao('entrada', $quantidade, date('Y-m-d H:i:s'), "Inserção de Produtos", $produto, $usuarioTenant);
-                $movimentacaoDAO = new MovimentacaoDAO();
-                $movimentacaoDAO->registrar($movimentacao);
+                $this->movimentacaoDAO->registrar($movimentacao);
             }
 
             header("Location: ../Controller/ProdutoController.php?acao=listarProdutos");
@@ -90,10 +115,7 @@
             }
 
             if(isset($_GET['id_produto'])){
-                $id = $_GET['id_produto'];
-
-                $produto = new ProdutoDAO();
-                $produto->excluir($id, $_SESSION['id']);
+                $this->produtoDAO->excluir($_GET['id_produto'], $_SESSION['id']);
             }
 
             header("Location: ../Controller/ProdutoController.php?acao=listarProdutos");
@@ -107,9 +129,9 @@
                 header("Location: ../index.php");
                 exit();
             }
-            //Recebendo os dados para criar um objeto do tipo Movimentacao.
+
             $id_produto = $_POST['id_produto'];
-            $tipo = $_POST['tipo']; // 'entrada' ou 'saida' <enum no banco de dados>.
+            $tipo = strtolower($_POST['tipo']); // 'entrada' ou 'saida' <enum no banco de dados>.
             $qtdMovimentada = (int)$_POST['quantidade'];
             $motivo = $_POST['motivo'];
             $id_usuario = $_SESSION['id'];
@@ -117,39 +139,39 @@
 
             if($qtdMovimentada <= 0){
                 echo "<p>O campo quantidade não pode ser zero ou negativo.</p>";
-                header("Refresh: 3; URL=../Controller/ProdutoController.php?acao=movimentar");
+                header("Refresh: 3; URL=../Controller/ProdutoController.php?acao=listarProdutos");
                 exit();
             }
 
-            $produtoNoBanco = new ProdutoDAO();
-            $informacaoProduto = $produtoNoBanco->buscarPorId($id_produto, $id_usuario);
+            // O DAO já devolve um OBJETO Produto, com Usuario/Fornecedor/Categoria embutidos
+            $produto = $this->produtoDAO->buscarPorId($id_produto, $id_usuario);
 
-            if(!$informacaoProduto) {
+            if(!$produto) {
                 echo "<p>Produto não encontrado!</p>";
-                header("Refresh: 3; URL=../Controller/ProdutoController.php?acao=movimentar");
+                header("Refresh: 3; URL=../Controller/ProdutoController.php?acao=listarProdutos");
                 exit();
             }
 
-            $saldoAtual = (int)$informacaoProduto['quantidade'];
+            $saldoAtual = (int)$produto->getQuantidade();
 
-            if(strtolower($tipo) === "entrada"){
+            if($tipo === "entrada"){
                 $novoSaldo = $saldoAtual + $qtdMovimentada;
-            }else{
+            } else {
                 if($saldoAtual >= $qtdMovimentada){
                     $novoSaldo = $saldoAtual - $qtdMovimentada;
-                }else{
+                } else {
                     echo "<p>Estoque insuficiente para realizar a saída.</p>";
-                    header("Refresh: 3; URL=../Controller/ProdutoController.php?acao=movimentar");
+                    header("Refresh: 3; URL=../Controller/ProdutoController.php?acao=listarProdutos");
                     exit();
                 }
             }
 
-            $produtoNoBanco -> atualizarQuantidade($id_produto, $novoSaldo, $id_usuario);
+            $this->produtoDAO->atualizarQuantidade($id_produto, $novoSaldo, $id_usuario);
 
-            $registrarMovimentacao = new Movimentacao($tipo, $qtdMovimentada, $data, $motivo, $id_produto, $id_usuario);
-
-            $movimentacaoDAO = new MovimentacaoDAO();
-            $movimentacaoDAO->registrar($registrarMovimentacao);
+            // Movimentacao exige objetos (Produto e Usuario), não IDs crus —
+            // o objeto Produto já vem pronto da busca acima.
+            $registrarMovimentacao = new Movimentacao($tipo, $qtdMovimentada, $data, $motivo, $produto, $produto->getUsuario());
+            $this->movimentacaoDAO->registrar($registrarMovimentacao);
 
             header("Location: ../Controller/ProdutoController.php?acao=listarProdutos");
             exit();
@@ -166,17 +188,17 @@
             $id_produto = $_GET['id_produto'];
             $id_usuario = $_SESSION['id'];
 
-            $produto = new ProdutoDAO();
-            $dadosProduto = $produto->buscarPorId($id_produto, $id_usuario);
+            $dadosProduto = $this->produtoDAO->buscarPorId($id_produto, $id_usuario);
 
-            $categoria = new CategoriaDAO();
-            $listaCategorias = $categoria->listarPorUsuario($id_usuario);
+            if (!$dadosProduto) {
+                header("Location: ../Controller/ProdutoController.php?acao=listarProdutos");
+                exit();
+            }
 
-            $fornecedor = new FornecedorDAO();
-            $listaFornecedores = $fornecedor->listarPorUsuario($id_usuario);
+            $listaCategorias = $this->categoriaDAO->listarPorUsuario($id_usuario);
+            $listaFornecedores = $this->fornecedorDAO->listarPorUsuario($id_usuario);
 
             require_once __DIR__ . '/../View/Produto/EditarProduto.php';
-            
         }
 
         public function atualizarProduto(){
@@ -186,29 +208,31 @@
                 header("Location: ../index.php");
                 exit();
             }
-            
-            $produtoDAO = new ProdutoDAO();
-            
-            $produtoAtualizado = new Produto(null, null, null, null, null, null, null, null, null);
-            $produtoAtualizado->setId($_POST['id']);
-            $produtoAtualizado->setSku($_POST['sku']);
-            $produtoAtualizado->setNome($_POST['nome']);
-            $produtoAtualizado->setDescricao($_POST['descricao']);
-            $produtoAtualizado->setPreco((float)$_POST['preco']);
-            $produtoAtualizado->setEstoqueMinimo((int)$_POST['estoque_minimo']);
 
-            $categoria = new Categoria($_POST['id_categoria'], null, new Cliente(null, null, null, null));
+            $usuarioTenant = new Cliente(null, null, null, null);
+            $usuarioTenant->setId($_SESSION['id']);
 
-            $fornecedor = new Fornecedor(null, null, null, null, new Cliente(null, null, null, null));
+            $categoria = new Categoria($_POST['id_categoria'], null, $usuarioTenant);
+
+            $fornecedor = new Fornecedor(null, null, null, null, $usuarioTenant);
             $fornecedor->setId($_POST['id_fornecedor']);
 
-            $produtoAtualizado->setCategoria($categoria);
-            $produtoAtualizado->setFornecedor($fornecedor);
-            $cliente = new Cliente(null, null, null, null);
-            $cliente->setId($_SESSION['id']);
-            $produtoAtualizado->setUsuario($cliente);
+            // Construímos o Produto já com as associações corretas no construtor,
+            // em vez de instanciar "vazio" e ir setando campo por campo.
+            $produtoAtualizado = new Produto(
+                $_POST['sku'],
+                $_POST['nome'],
+                $_POST['descricao'],
+                (float)$_POST['preco'],
+                null, // quantidade não é alterada por aqui — só via movimentação
+                (int)$_POST['estoque_minimo'],
+                $usuarioTenant,
+                $fornecedor,
+                $categoria
+            );
+            $produtoAtualizado->setId($_POST['id']);
 
-            $produtoDAO->atualizar($produtoAtualizado);
+            $this->produtoDAO->atualizar($produtoAtualizado);
 
             header("Location: ../Controller/ProdutoController.php?acao=listarProdutos");
             exit();
