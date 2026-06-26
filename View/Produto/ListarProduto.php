@@ -1,3 +1,8 @@
+<?php
+    require_once __DIR__ . '/../../Model/Produto.php';
+    /** @var Produto[] $listaDeprodutos */
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>

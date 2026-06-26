@@ -1,3 +1,8 @@
+<?php 
+/** @var string $tipo 
+ * @var array $listaRanking 
+ */ 
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>

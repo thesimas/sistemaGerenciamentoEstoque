@@ -1,3 +1,11 @@
+<?php
+    require_once __DIR__ . '/../../Model/DAO/RelatorioDAO.php';
+    /** @var RelatorioDAO[] $listaMovimentacoes * 
+    * @var string $inicio 
+    * @var string $fim 
+    * @var array $listaMovimentacoes 
+    */ 
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>

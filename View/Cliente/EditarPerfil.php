@@ -1,3 +1,7 @@
+<?php
+    require_once __DIR__ . '/../../Model/Usuario.php';
+    /** @var Usuario $dadosCliente */
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>

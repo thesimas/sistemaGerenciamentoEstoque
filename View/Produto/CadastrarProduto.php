@@ -1,3 +1,9 @@
+<?php
+    require_once __DIR__ . '/../../Model/Categoria.php';
+    /** @var Categoria[] $listaDeCategorias */
+    require_once __DIR__ . '/../../Model/Fornecedor.php';
+    /** @var Fornecedor[] $listaDeFornecedores */
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
