@@ -48,16 +48,16 @@
             </thead>
             <tbody>
                 <?php if(isset($listaFornecedores) && count($listaFornecedores) > 0): ?>
-                    <?php foreach($listaFornecedores as $forn): ?>
+                    <?php foreach($listaFornecedores as $fornecedor): ?>
                         <tr>
-                            <td><?php echo $forn['nome_empresa']; ?></td>
-                            <td><?php echo $forn['cnpj']; ?></td>
-                            <td><?php echo $forn['email']; ?></td>
+                            <td><?php echo $fornecedor->getNomeEmpresa(); ?></td>
+                            <td><?php echo $fornecedor->getCnpj(); ?></td>
+                            <td><?php echo $fornecedor->getEmail(); ?></td>
                             <td>
-                                <a href="FornecedorController.php?acao=prepararEdicaoFornecedor&id_fornecedor=<?php echo $forn['id']; ?>" 
+                                <a href="FornecedorController.php?acao=prepararEdicaoFornecedor&id_fornecedor=<?php echo $fornecedor->getId(); ?>" 
                                    class="btn-acao btn-editar">Editar</a>
                                 
-                                <a href="FornecedorController.php?acao=excluirFornecedor&id_fornecedor=<?php echo $forn['id']; ?>" 
+                                <a href="FornecedorController.php?acao=excluirFornecedor&id_fornecedor=<?php echo $fornecedor->getId(); ?>" 
                                    onclick="return confirm('Tem certeza?')" 
                                    class="btn-acao btn-excluir">Excluir</a>
                             </td>

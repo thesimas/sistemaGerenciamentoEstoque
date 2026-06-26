@@ -1,3 +1,8 @@
+<?php
+    require_once __DIR__ . '/../../Model/DAO/RelatorioDAO.php';
+    /** @var RelatorioDAO[] $listaEstoque */
+    /** @var array $listaEstoque */
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -98,7 +103,7 @@
             <div class="card-resumo">
                 <h2>Total de Itens Cadastrados</h2>
                 <div class="qtd-destaque">
-                    <?php echo $listaEstoque['Total_Itens_Cadastrados']; ?>
+                    <?php echo $listaEstoque['Total_Itens_Cadastrados'] ?? 0; ?>
                 </div>
                 <p style="margin-top: 10px; color: #888;">Produtos únicos na base de dados</p>
             </div>

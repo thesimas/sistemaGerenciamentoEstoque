@@ -1,3 +1,9 @@
+<?php
+    require_once __DIR__ . '/../../Model/Categoria.php';
+    /** @var Categoria[] $listaDeCategorias */
+    require_once __DIR__ . '/../../Model/Fornecedor.php';
+    /** @var Fornecedor[] $listaDeFornecedores */
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -64,9 +70,9 @@
                 <label>Categoria:</label>
                 <select name="id_categoria" required>
                     <option value="">Selecione...</option>
-                    <?php foreach($listaDeCategorias as $cat): ?>
-                        <option value="<?php echo $cat['id']; ?>">
-                            <?php echo $cat['nome']; ?>
+                    <?php foreach($listaDeCategorias as $categoria): ?>
+                        <option value="<?php echo $categoria->getId(); ?>">
+                            <?php echo $categoria->getNome(); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -76,9 +82,9 @@
                 <label>Fornecedor:</label>
                 <select name="id_fornecedor" required>
                     <option value="">Selecione...</option>
-                    <?php foreach($listaDeFornecedores as $forn): ?>
-                        <option value="<?php echo $forn['id']; ?>">
-                            <?php echo $forn['nome_empresa']; ?> (CNPJ: <?php echo $forn['cnpj']; ?>)
+                    <?php foreach($listaDeFornecedores as $fornecedor): ?>
+                        <option value="<?php echo $fornecedor->getId(); ?>">
+                            <?php echo $fornecedor->getNomeEmpresa(); ?> (CNPJ: <?php echo $fornecedor->getCnpj(); ?>)
                         </option>
                     <?php endforeach; ?>
                 </select>

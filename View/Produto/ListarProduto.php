@@ -1,3 +1,8 @@
+<?php
+    require_once __DIR__ . '/../../Model/Produto.php';
+    /** @var Produto[] $listaDeprodutos */
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -49,23 +54,23 @@
             </thead>
             <tbody>
                 <?php if(count($listaDeprodutos) > 0): ?>
-                    <?php foreach($listaDeprodutos as $prod): ?>
+                    <?php foreach($listaDeprodutos as $produto): ?>
                         <?php 
                             // Lógica visual: Verifica se estoque está baixo
-                            $alerta = $prod['quantidade'] < $prod['estoque_minimo'];
+                            $alerta = $produto->getQuantidade() < $produto->getEstoqueMinimo();
                             $classeLinha = $alerta ? 'style="background-color: #fff3cd;"' : ''; 
                             $textoStatus = $alerta ? '<span style="color:red; font-weight:bold;">BAIXO!</span>' : '<span style="color:green;">OK</span>';
                         ?>
                         <tr <?php echo $classeLinha; ?>>
-                            <td><?php echo $prod['sku']; ?></td>
+                            <td><?php echo $produto->getSku(); ?></td>
                             <td>
-                                <strong><?php echo $prod['nome']; ?></strong><br>
-                                <small><?php echo $prod['descricao']; ?></small>
+                                <strong><?php echo $produto->getNome(); ?></strong><br>
+                                <small><?php echo $produto->getDescricao(); ?></small>
                             </td>
-                            <td>R$ <?php echo number_format($prod['preco'], 2, ',', '.'); ?></td>
+                            <td>R$ <?php echo number_format($produto->getPreco(), 2, ',', '.'); ?></td>
                             
                             <td style="font-size: 1.2rem; font-weight: bold;">
-                                <?php echo $prod['quantidade']; ?>
+                                <?php echo $produto->getQuantidade(); ?>
                             </td>
                             
                             <td><?php echo $textoStatus; ?></td>
@@ -73,7 +78,7 @@
                             <td>
                                 <form action="ProdutoController.php" method="POST" style="display:flex; gap:5px; margin:0; padding:0; background:none; box-shadow:none;">
                                     <input type="hidden" name="acao" value="movimentar">
-                                    <input type="hidden" name="id_produto" value="<?php echo $prod['id']; ?>">
+                                    <input type="hidden" name="id_produto" value="<?php echo $produto->getId(); ?>">
                                     <input type="hidden" name="motivo" value="Ajuste Rápido">
                                     
                                     <select name="tipo" style="width: 80px; padding: 5px;">
@@ -88,9 +93,9 @@
                             </td>
 
                             <td>
-                                <a href="ProdutoController.php?acao=prepararEdicaoProduto&id_produto=<?php echo $prod['id']; ?>" 
+                                <a href="ProdutoController.php?acao=prepararEdicaoProduto&id_produto=<?php echo $produto->getId(); ?>" 
                                  class="btn-acao btn-editar">Editar</a>
-                                <a href="ProdutoController.php?acao=excluirProduto&id_produto=<?php echo $prod['id']; ?>" 
+                                <a href="ProdutoController.php?acao=excluirProduto&id_produto=<?php echo $produto->getId(); ?>" 
                                    onclick="return confirm('Tem certeza que deseja excluir?')" 
                                  class="btn-acao btn-excluir">Excluir</a>
                             </td>

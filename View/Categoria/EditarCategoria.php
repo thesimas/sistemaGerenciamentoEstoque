@@ -1,3 +1,7 @@
+<?php
+require_once __DIR__ . '/../../Model/Categoria.php'; // Apresenta a classe para a IDE
+/** @var Categoria $categoria */
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -37,9 +41,9 @@
         <form action="CategoriaController.php" method="POST">
             <fieldset>
                 <label>Nome da Categoria: </label>
-                <input type="text" name="nome" value="<?php echo $dadosCategoria['nome']; ?>" required>
+                <input type="text" name="nome" value="<?php echo $categoria->getNome(); ?>" required>
                 
-                <input type="hidden" name="id_categoria" value="<?php echo $dadosCategoria['id']; ?>">
+                <input type="hidden" name="id_categoria" value="<?php echo $categoria->getId(); ?>">
                 <input type="hidden" name="acao" value="atualizarCategoria">
                 
                 <div style="margin-top: 15px;">

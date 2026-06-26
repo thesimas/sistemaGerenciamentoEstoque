@@ -1,3 +1,11 @@
+<?php
+    require_once __DIR__ . '/../../Model/Produto.php';
+    /** @var Produto $dadosProduto */
+    require_once __DIR__ . '/../../Model/Categoria.php';
+    /** @var Categoria[] $listaCategorias */
+    require_once __DIR__ . '/../../Model/Fornecedor.php';
+    /** @var Fornecedor[] $listaFornecedores */
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -36,19 +44,19 @@
                 <legend>Dados Principais</legend>
                 
                 <label>SKU:</label>
-                <input type="text" name="sku" value="<?php echo $dadosProduto['sku']; ?>" required>
+                <input type="text" name="sku" value="<?php echo $dadosProduto->getSku(); ?>" required>
 
                 <label>Nome:</label>
-                <input type="text" name="nome" value="<?php echo $dadosProduto['nome']; ?>" required>
+                <input type="text" name="nome" value="<?php echo $dadosProduto->getNome(); ?>" required>
 
                 <label>Descrição:</label>
-                <input type="text" name="descricao" value="<?php echo $dadosProduto['descricao']; ?>" required>
+                <input type="text" name="descricao" value="<?php echo $dadosProduto->getDescricao(); ?>" required>
 
                 <label>Preço (R$):</label>
-                <input type="number" name="preco" step="0.01" value="<?php echo $dadosProduto['preco']; ?>" required>
+                <input type="number" name="preco" step="0.01" value="<?php echo $dadosProduto->getPreco(); ?>" required>
                 
                 <label>Estoque Mínimo:</label>
-                <input type="number" name="estoque_minimo" value="<?php echo $dadosProduto['estoque_minimo']; ?>" required>
+                <input type="number" name="estoque_minimo" value="<?php echo $dadosProduto->getEstoqueMinimo(); ?>" required>
                 
                 </fieldset>
 
@@ -58,9 +66,9 @@
                 <label>Categoria:</label>
                 <select name="id_categoria" required>
                     <?php foreach($listaCategorias as $categoria): ?>
-                        <?php $selected = ($categoria['id'] == $dadosProduto['id_categoria']) ? 'selected' : ''; ?>
-                        <option value="<?php echo $categoria['id']; ?>" <?php echo $selected; ?>>
-                            <?php echo $categoria['nome']; ?>
+                        <?php $selected = ($categoria->getId() == $dadosProduto->getCategoria()?->getId()) ? 'selected' : ''; ?>
+                        <option value="<?php echo $categoria->getId(); ?>" <?php echo $selected; ?>>
+                            <?php echo $categoria->getNome(); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -68,15 +76,15 @@
                 <label>Fornecedor:</label>
                 <select name="id_fornecedor" required>
                     <?php foreach($listaFornecedores as $fornecedor): ?>
-                        <?php $selected = ($fornecedor['id'] == $dadosProduto['id_fornecedor']) ? 'selected' : ''; ?>
-                        <option value="<?php echo $fornecedor['id']; ?>" <?php echo $selected; ?>>
-                            <?php echo $fornecedor['nome_empresa']; ?>
+                        <?php $selected = ($fornecedor->getId() == $dadosProduto->getFornecedor()?->getId()) ? 'selected' : ''; ?>
+                        <option value="<?php echo $fornecedor->getId(); ?>" <?php echo $selected; ?>>
+                            <?php echo $fornecedor->getNomeEmpresa(); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
             </fieldset>
 
-            <input type="hidden" name="id" value="<?php echo $dadosProduto['id']; ?>">
+            <input type="hidden" name="id" value="<?php echo $dadosProduto->getId(); ?>">
             <input type="hidden" name="acao" value="atualizarProduto">
             
             <div style="margin-top: 15px;">

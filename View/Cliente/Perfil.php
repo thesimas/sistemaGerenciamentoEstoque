@@ -1,3 +1,7 @@
+<?php
+    require_once __DIR__ . '/../../Model/Usuario.php';
+    /** @var Usuario $dadosCliente */
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -31,11 +35,11 @@
 
     <div class="container">
         <h1>Meu Perfil</h1>
-        <p><strong>Nome da Empresa:</strong> <?php echo $dadosCliente['nome']; ?></p>
-        <p><strong>Email:</strong> <?php echo $dadosCliente['email']; ?></p>
+        <p><strong>Nome da Empresa:</strong> <?php echo $dadosCliente->getNome(); ?></p>
+        <p><strong>Email:</strong> <?php echo $dadosCliente->getEmail(); ?></p>
         <p><strong>Foto de Perfil: <br><br>
-        <?php if($dadosCliente['foto_perfil']): ?>
-            <img src="../View/Assets/Imagens/Uploads/<?php echo $dadosCliente['foto_perfil']; ?>" alt="Foto de Perfil" style="max-width: 200px; max-height: 200px;">
+        <?php if($dadosCliente->getFotoPerfil()): ?>
+            <img src="../View/Assets/Imagens/Uploads/<?php echo $dadosCliente->getFotoPerfil(); ?>" alt="Foto de Perfil" style="max-width: 200px; max-height: 200px;">
         <?php else: ?>
             <p>Foto de Perfil não disponível.</p>
         <?php endif; ?>
