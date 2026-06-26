@@ -50,6 +50,22 @@
             return null;
         }
 
+        public function emailExiste($email){
+
+            $conexao = Conexao::Conectar();
+
+            $sql = "SELECT id FROM usuarios
+                    WHERE email = :email";
+
+            $stmt = $conexao->prepare($sql);
+
+            $stmt->bindValue(":email",$email);
+
+            $stmt->execute();
+
+            return $stmt->rowCount() > 0;
+        }
+
         public function buscarPorId($id){
             $conexao = Conexao::Conectar();
 

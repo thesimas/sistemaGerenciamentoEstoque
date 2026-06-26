@@ -32,8 +32,9 @@
             <input type="hidden" name="acao" value="logar">
             
             <button type="submit" class="btn">Entrar</button>
-            </form>
+        </form>
+        <br>
+        <p>Não possui cadastro? <a class="gerencia" href="../View/Cadastro.php">Cadastre-se</a></p>
     </div>
-
 </body>
 </html>

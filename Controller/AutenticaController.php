@@ -9,6 +9,81 @@
                 $this->usuarioDAO = new UsuarioDAO();
             }
 
+            public function cadastrar(){
+
+                session_start();
+
+                if($this->usuarioDAO->emailExiste($_POST['email'])){
+
+                    $_SESSION['erro_cadastro'] = "Este email já está cadastrado.";
+
+                    header("Location: ../View/Cadastro.php");
+
+                    exit();
+                }
+
+                $foto = null;
+
+                if(isset($_FILES['foto_perfil'])
+                    && $_FILES['foto_perfil']['error'] == UPLOAD_ERR_OK){
+
+                    $extensao = strtolower(
+                        pathinfo(
+                            $_FILES['foto_perfil']['name'],
+                            PATHINFO_EXTENSION
+                        )
+                    );
+
+                    $nomeFoto = uniqid("perfil_")
+                        .".".$extensao;
+
+                    $destino = __DIR__
+                        ."/../View/Assets/Imagens/Uploads/";
+
+                    if(!is_dir($destino)){
+                        mkdir($destino,0755,true);
+                    }
+
+                    move_uploaded_file(
+                        $_FILES['foto_perfil']['tmp_name'],
+                        $destino.$nomeFoto
+                    );
+
+                    $foto = $nomeFoto;
+                }
+
+                $cliente = new Cliente(
+
+                    $_POST['nome'],
+
+                    $_POST['email'],
+
+                    $_POST['senha'],
+
+                    $_POST['nome_empresa'],
+
+                    $foto
+                );
+
+                $id = $this->usuarioDAO->inserir($cliente);
+
+                $cliente->setId($id);
+
+                $_SESSION['id'] = $cliente->getId();
+
+                $_SESSION['nome'] = $cliente->getNome();
+
+                $_SESSION['email'] = $cliente->getEmail();
+
+                $_SESSION['foto_perfil'] = $cliente->getFotoPerfil();
+
+                $_SESSION['tipo'] = "cliente";
+
+                header("Location: ".$cliente->enderecoPaginaInicial());
+
+                exit();
+            }
+
             public function logar(){
                 session_start();
 
@@ -54,12 +129,18 @@
 
             switch($_REQUEST['acao']){
                 case 'logar':
-                $controller->logar();
-                break;
+                    $controller->logar();
+                    break;
                 case 'logout':
                     $controller->logout();
                     break;
+                case 'cadastrar':
+                    $controller->cadastrar();
+                    break;
+                default:
+                    http_response_code(400);
+                    echo "Ação inválida.";
+                    break;
             }
         }
-
 ?>
