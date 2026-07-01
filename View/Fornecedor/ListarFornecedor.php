@@ -58,8 +58,8 @@
                                    class="btn-acao btn-editar">Editar</a>
                                 
                                 <a href="FornecedorController.php?acao=excluirFornecedor&id_fornecedor=<?php echo $fornecedor->getId(); ?>" 
-                                   onclick="return confirm('Tem certeza?')" 
-                                   class="btn-acao btn-excluir">Excluir</a>
+                                    onclick="return confirm('Aviso: Ao excluir este fornecedor, todos os produtos associados a ele ficarão sem fornecedor (NULL). Deseja realmente excluir?')" 
+                                    class="btn-acao btn-excluir">Excluir</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

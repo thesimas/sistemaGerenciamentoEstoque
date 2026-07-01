@@ -6,16 +6,17 @@ DROP DATABASE IF EXISTS sistema_estoque;
 CREATE DATABASE sistema_estoque;
 USE sistema_estoque;
 
--- Tabela de Usuários
+-- Tabela de Usuários (Coluna 'nome' removida, 'responsavel_tecnico' atuando como identificador principal)
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
+    nome_empresa VARCHAR(150),
+    responsavel_tecnico VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     senha VARCHAR(255) NOT NULL, 
     foto_perfil VARCHAR(255),
     tipo ENUM('admin', 'cliente') DEFAULT 'cliente',
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)engine = InnoDb;;
+) ENGINE = InnoDB;
 
 -- Tabela de Categorias
 CREATE TABLE categorias (
@@ -23,7 +24,7 @@ CREATE TABLE categorias (
     nome VARCHAR(50) NOT NULL,
     id_usuario INT NOT NULL,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE
-)engine = InnoDb;;
+) ENGINE = InnoDB;
 
 -- Tabela de Fornecedores
 CREATE TABLE fornecedores (
@@ -38,10 +39,9 @@ CREATE TABLE fornecedores (
     observacoes TEXT,
     id_usuario INT NOT NULL,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE
-)engine = InnoDb;
+) ENGINE = InnoDB;
 
 -- Tabela de Produtos
--- AJUSTE IMPORTANTE: id_fornecedor aceita NULL e tem ON DELETE SET NULL
 CREATE TABLE produtos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     sku VARCHAR(50) NOT NULL,
@@ -52,13 +52,13 @@ CREATE TABLE produtos (
     estoque_minimo INT DEFAULT 5,
     
     id_categoria INT NULL,
-    id_fornecedor INT NULL, -- Pode ficar vazio se o fornecedor for excluído
+    id_fornecedor INT NULL,
     id_usuario INT NOT NULL,
     
     FOREIGN KEY (id_categoria) REFERENCES categorias(id) ON DELETE SET NULL,
     FOREIGN KEY (id_fornecedor) REFERENCES fornecedores(id) ON DELETE SET NULL,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE
-)engine = InnoDb;
+) ENGINE = InnoDB;
 
 -- Tabela de Movimentações
 CREATE TABLE movimentacoes (
@@ -73,14 +73,14 @@ CREATE TABLE movimentacoes (
     
     FOREIGN KEY (id_produto) REFERENCES produtos(id) ON DELETE CASCADE,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE
-)engine = InnoDb;
+) ENGINE = InnoDB;
 
+-- Tabela de Configurações
 CREATE TABLE configuracoes (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    id_usuario int,
-    
+    id_usuario INT,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE
-)engine = InnoDb;
+) ENGINE = InnoDB;
 
 -- ========================================================
 -- 2. POVOAMENTO DE DADOS (DML) - CENÁRIO REAL
@@ -91,30 +91,25 @@ CREATE TABLE configuracoes (
 -- Senha padrão para todos: '123'
 -- --------------------------------------------------------
 
-INSERT INTO usuarios (id, nome, email, senha, tipo) VALUES 
-(1, 'Administrador Geral', 'admin@sistema.com', '$2y$10$Qz5iJthqYIvavuxGtXvUE.bMj1jZgLvtifPLpznI7EVMoHVLnoLdC', 'admin'),
-(2, 'TechZone Eletrônicos', 'tech@cliente.com', '$2y$10$Qz5iJthqYIvavuxGtXvUE.bMj1jZgLvtifPLpznI7EVMoHVLnoLdC', 'cliente'),
-(3, 'Moda Fashion Store', 'moda@cliente.com', '$2y$10$Qz5iJthqYIvavuxGtXvUE.bMj1jZgLvtifPLpznI7EVMoHVLnoLdC', 'cliente'),
-(4, 'Mercado Fresco', 'mercado@cliente.com', '$2y$10$Qz5iJthqYIvavuxGtXvUE.bMj1jZgLvtifPLpznI7EVMoHVLnoLdC', 'cliente');
-
+INSERT INTO usuarios (id, nome_empresa, responsavel_tecnico, email, senha, foto_perfil, tipo) VALUES 
+(1, NULL, 'Administrador Geral', 'admin@sistema.com', '$2y$10$Qz5iJthqYIvavuxGtXvUE.bMj1jZgLvtifPLpznI7EVMoHVLnoLdC', NULL, 'admin'),
+(2, 'TechZone Eletrônicos', 'Carlos Silva', 'tech@cliente.com', '$2y$10$Qz5iJthqYIvavuxGtXvUE.bMj1jZgLvtifPLpznI7EVMoHVLnoLdC', 'foto_perfil_6a0f40f1c6431.png', 'cliente'),
+(3, 'Moda Fashion Store', 'Mariana Costa', 'moda@cliente.com', '$2y$10$Qz5iJthqYIvavuxGtXvUE.bMj1jZgLvtifPLpznI7EVMoHVLnoLdC', 'foto_perfil_6a0f40921a415.png', 'cliente'),
+(4, 'Mercado Fresco', 'Roberto Souza', 'mercado@cliente.com', '$2y$10$Qz5iJthqYIvavuxGtXvUE.bMj1jZgLvtifPLpznI7EVMoHVLnoLdC', 'foto_perfil_6a060bea11ae0.jpg', 'cliente');
 
 -- ========================================================
 -- DADOS DO CLIENTE 1: TechZone (ID 2)
 -- ========================================================
-
--- Categorias
 INSERT INTO categorias (id, nome, id_usuario) VALUES 
 (1, 'Computadores', 2),
 (2, 'Periféricos', 2),
 (3, 'Smartphones', 2),
 (4, 'Games', 2);
 
--- Fornecedores
 INSERT INTO fornecedores (id, nome_empresa, email, cnpj, telefone, id_usuario) VALUES 
 (1, 'Distribuidora Global Tech', 'contato@globaltech.com', '11.111.111/0001-11', '11999990001', 2),
 (2, 'Mega Hardware Import', 'vendas@megahardware.com', '22.222.222/0001-22', '11999990002', 2);
 
--- Produtos (8 itens)
 INSERT INTO produtos (sku, nome, descricao, preco, quantidade, estoque_minimo, id_categoria, id_fornecedor, id_usuario) VALUES 
 ('PC-GAMER-01', 'PC Gamer i7', 'Core i7, 16GB RAM, RTX 3060', 5500.00, 5, 2, 1, 2, 2),
 ('NOTE-DELL', 'Notebook Dell Inspiron', 'i5, 8GB RAM, SSD 256GB', 3200.00, 8, 3, 1, 1, 2),
@@ -125,24 +120,20 @@ INSERT INTO produtos (sku, nome, descricao, preco, quantidade, estoque_minimo, i
 ('PS5-CONSOLE', 'PlayStation 5', 'Versão com disco', 3900.00, 3, 1, 4, 2, 2),
 ('XBOX-SERIES', 'Xbox Series X', '1TB SSD', 3800.00, 4, 1, 4, 2, 2);
 
-
 -- ========================================================
 -- DADOS DO CLIENTE 2: Moda Fashion (ID 3)
 -- ========================================================
 
--- Categorias
 INSERT INTO categorias (id, nome, id_usuario) VALUES 
 (5, 'Camisetas', 3),
 (6, 'Calças', 3),
 (7, 'Calçados', 3),
 (8, 'Acessórios', 3);
 
--- Fornecedores
 INSERT INTO fornecedores (id, nome_empresa, email, cnpj, telefone, id_usuario) VALUES 
 (3, 'Têxtil Santa Catarina', 'pedidos@textilsc.com.br', '33.333.333/0001-33', '47999990003', 3),
 (4, 'Couros do Sul', 'contato@courosul.com.br', '44.444.444/0001-44', '51999990004', 3);
 
--- Produtos (8 itens)
 INSERT INTO produtos (sku, nome, descricao, preco, quantidade, estoque_minimo, id_categoria, id_fornecedor, id_usuario) VALUES 
 ('CAM-BASIC-B', 'Camiseta Básica Branca', 'Algodão Pima, Tam M', 89.90, 50, 10, 5, 3, 3),
 ('CAM-EST-ROCK', 'Camiseta Estampa Rock', 'Preta, Tam G', 120.00, 20, 5, 5, 3, 3),
@@ -153,24 +144,20 @@ INSERT INTO produtos (sku, nome, descricao, preco, quantidade, estoque_minimo, i
 ('CINTO-PRETO', 'Cinto de Couro', 'Fivela prata', 60.00, 25, 5, 8, 4, 3),
 ('BONE-ABA', 'Boné Aba Curva', 'Preto liso', 45.00, 30, 8, 8, 3, 3);
 
-
 -- ========================================================
 -- DADOS DO CLIENTE 3: Mercado Fresco (ID 4)
 -- ========================================================
 
--- Categorias
 INSERT INTO categorias (id, nome, id_usuario) VALUES 
 (9, 'Hortifruti', 4),
 (10, 'Padaria', 4),
 (11, 'Bebidas', 4),
 (12, 'Limpeza', 4);
 
--- Fornecedores
 INSERT INTO fornecedores (id, nome_empresa, email, cnpj, telefone, id_usuario) VALUES 
 (5, 'Fazenda Doce Campo', 'vendas@docecampo.com', '55.555.555/0001-55', '31999990005', 4),
 (6, 'Atacadão das Bebidas', 'comercial@atacadao.com', '66.666.666/0001-66', '11999990006', 4);
 
--- Produtos (8 itens)
 INSERT INTO produtos (sku, nome, descricao, preco, quantidade, estoque_minimo, id_categoria, id_fornecedor, id_usuario) VALUES 
 ('MACA-GALA', 'Maçã Gala', 'Preço por KG', 8.50, 100, 20, 9, 5, 4),
 ('BANANA-PRATA', 'Banana Prata', 'Preço por KG', 6.90, 80, 15, 9, 5, 4),
@@ -182,7 +169,7 @@ INSERT INTO produtos (sku, nome, descricao, preco, quantidade, estoque_minimo, i
 ('DETERGENTE', 'Detergente Ypê', 'Neutro 500ml', 2.50, 100, 20, 12, 6, 4);
 
 -- ========================================================
--- ALGUNS LOGS DE MOVIMENTAÇÃO (Para o Dashboard não ficar vazio)
+-- MOVIMENTAÇÕES DE EXEMPLO
 -- ========================================================
 
 -- Cliente 2 (Tech) fazendo estoque inicial
@@ -192,5 +179,5 @@ INSERT INTO movimentacoes (tipo, quantidade, motivo, id_produto, id_usuario) VAL
 
 -- Cliente 3 (Moda) vendendo algo
 INSERT INTO movimentacoes (tipo, quantidade, motivo, id_produto, id_usuario) VALUES
-('entrada', 55, 'Compra de Estoque', 9, 3), -- Entrou 55 camisetas
-('saida', 5, 'Venda no Balcão', 9, 3);    -- Vendeu 5, sobrou 50
+('entrada', 55, 'Compra de Estoque', 9, 3),
+('saida', 5, 'Venda no Balcão', 9, 3);
