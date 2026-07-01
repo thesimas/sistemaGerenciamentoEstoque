@@ -1,6 +1,7 @@
 <?php
     require_once __DIR__ . '/../../Model/Usuario.php';
     /** @var Usuario $dadosCliente */
+    /** @var Cliente $dadosCliente */
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -35,7 +36,8 @@
 
     <div class="container">
         <h1>Meu Perfil</h1>
-        <p><strong>Nome da Empresa:</strong> <?php echo $dadosCliente->getNome(); ?></p>
+        <p><strong>Responsável Técnico:</strong> <?php echo $dadosCliente->getResponsavelTecnico(); ?></p>
+        <p><strong>Nome da Empresa:</strong> <?php echo $dadosCliente->getNomeEmpresa(); ?></p>
         <p><strong>Email:</strong> <?php echo $dadosCliente->getEmail(); ?></p>
         <p><strong>Foto de Perfil: <br><br>
         <?php if($dadosCliente->getFotoPerfil()): ?>
@@ -46,6 +48,7 @@
         <br></strong></p>
         <a href="ClienteController.php?acao=dashboard" class="btn" style="margin-top: 20px;">Voltar ao Menu</a>
         <a href="ClienteController.php?acao=prepararEdicaoPerfil" class="btn" style="margin-top: 20px; background-color: #6c757d;">Editar Perfil</a>
+        <a href="ClienteController.php?acao=excluirPerfil" class="btn" style="margin-top: 20px; background-color: #dc3545;" onclick="return confirm('ATENÇÃO: Você está prestes a excluir sua conta! TODOS os seus produtos, categorias e fornecedores serão apagados permanentemente. Deseja realmente excluir seu perfil?')">Excluir Minha Conta</a>
     </div>
 
 </body>

@@ -59,19 +59,15 @@
                 exit();
             }
 
-            // Buscamos o objeto já existente para preservar campos não enviados no form
-            // (ex.: nomeEmpresa) e para não sobrescrever a senha com hash vazio.
             $cliente = $this->usuarioDAO->buscarPorId($_SESSION['id']);
 
-            $cliente->setNome($_POST['nome']);
+            /** @var Cliente $cliente */
+            $cliente->setResponsavelTecnico($_POST['responsavel_tecnico']);
             $cliente->setEmail($_POST['email']);
 
             if (!empty($_POST['senha'])) {
                 $cliente->setSenha($_POST['senha']);
             }
-            // Se a senha vier vazia, mantemos o hash atual — a DAO sempre faz
-            // password_hash() do que estiver em getSenha(), então é importante
-            // não reduzi-lo a uma senha vazia aqui.
 
             $fotoPerfil = $_FILES['foto_perfil'] ?? null;
 
@@ -98,18 +94,42 @@
         }
 
         /**
+         * Realiza a exclusão da conta do cliente logado, limpa a sessão e 
+         * redireciona para a tela de login.
+         */
+        public function excluirPerfil(){
+            session_start();
+
+            if(!isset($_SESSION['id']) || $_SESSION['tipo'] != 'cliente'){
+                header("Location: ../index.php");
+                exit();
+            }
+
+            // Remove o usuário do banco de dados (as chaves estrangeiras em CASCADE cuidam do resto)
+            $this->usuarioDAO->excluir($_SESSION['id']);
+
+            // Limpa e destroi as variáveis de sessão de forma segura
+            session_unset();
+            session_destroy();
+
+            // Redireciona corretamente para a View de Login
+            header("Location: ../View/Login.php");
+            exit();
+        }
+
+        /**
          * Mantém a sessão sincronizada com os dados atuais do usuário.
-         * Centralizado aqui porque dashboard() e perfil() faziam a mesma coisa
-         * repetida em três blocos de if/else.
+         * Mapeia o 'responsavel_tecnico' para a variável de sessão usada nas Views.
          */
         private function sincronizarSessao(Cliente $cliente): void {
-            $_SESSION['nome'] = $cliente->getNome();
+            $_SESSION['nome'] = $cliente->getResponsavelTecnico(); 
             $_SESSION['email'] = $cliente->getEmail();
             $_SESSION['foto_perfil'] = $cliente->getFotoPerfil();
         }
 
     }
 
+    // Bloco de Roteamento Corrigido
     if(isset($_REQUEST['acao'])){
         $controller = new ClienteController();
         switch($_REQUEST['acao']){
@@ -124,6 +144,9 @@
                 break;
             case 'atualizarPerfil':
                 $controller->atualizarPerfil();
+                break;
+            case 'excluirPerfil':
+                $controller->excluirPerfil();
                 break;
             default:
                 $controller->dashboard();

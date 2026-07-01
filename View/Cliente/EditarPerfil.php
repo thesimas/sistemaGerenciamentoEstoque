@@ -1,6 +1,7 @@
 <?php
     require_once __DIR__ . '/../../Model/Usuario.php';
     /** @var Usuario $dadosCliente */
+    /** @var Cliente $dadosCliente */
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -37,8 +38,12 @@
         <h1>Editar Perfil</h1>
         <form action="ClienteController.php?acao=atualizarPerfil" method="POST" enctype="multipart/form-data">
             <div class="form-group">
-                <label for="nome">Nome da Empresa:</label>
-                <input type="text" id="nome" name="nome" value="<?php echo $dadosCliente->getNome(); ?>" required>
+                <label for="nome_empresa">Nome da Empresa:</label>
+                <input type="text" id="nome_empresa" name="nome_empresa" value="<?php echo $dadosCliente->getNomeEmpresa(); ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="responsavel_tecnico">Responsável Técnico:</label>
+                <input type="text" id="responsavel_tecnico" name="responsavel_tecnico" value="<?php echo $dadosCliente->getResponsavelTecnico(); ?>" required>
             </div>
             <div class="form-group">
                 <label for="email">Email:</label>

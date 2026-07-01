@@ -12,17 +12,19 @@
             $tipo = $this->tipoUsuario($usuario);
             $senhaHash = password_hash($usuario->getSenha(), PASSWORD_DEFAULT);
             $nomeEmpresa = ($usuario instanceof Cliente) ? $usuario->getNomeEmpresa() : null;
+            $respTecnico = ($usuario instanceof Cliente) ? $usuario->getResponsavelTecnico() : null;
 
-            $consultaSql = "INSERT INTO usuarios (nome, email, senha, foto_perfil, tipo, nome_empresa) 
-                             VALUES (:nome, :email, :senha, :foto_perfil, :tipo, :nome_empresa)";
+            // REMOVIDO a coluna 'nome' do INSERT
+            $consultaSql = "INSERT INTO usuarios (email, senha, foto_perfil, tipo, nome_empresa, responsavel_tecnico) 
+                             VALUES (:email, :senha, :foto_perfil, :tipo, :nome_empresa, :responsavel_tecnico)";
 
             $declaracao = $conexao->prepare($consultaSql);
-            $declaracao->bindValue(':nome', $usuario->getNome());
             $declaracao->bindValue(':email', $usuario->getEmail());
             $declaracao->bindValue(':senha', $senhaHash);
             $declaracao->bindValue(':foto_perfil', $usuario->getFotoPerfil());
             $declaracao->bindValue(':tipo', $tipo);
             $declaracao->bindValue(':nome_empresa', $nomeEmpresa);
+            $declaracao->bindValue(':responsavel_tecnico', $respTecnico);
 
             $declaracao->execute();
 
@@ -51,24 +53,16 @@
         }
 
         public function emailExiste($email){
-
             $conexao = Conexao::Conectar();
-
-            $sql = "SELECT id FROM usuarios
-                    WHERE email = :email";
-
+            $sql = "SELECT id FROM usuarios WHERE email = :email";
             $stmt = $conexao->prepare($sql);
-
             $stmt->bindValue(":email",$email);
-
             $stmt->execute();
-
             return $stmt->rowCount() > 0;
         }
 
         public function buscarPorId($id){
             $conexao = Conexao::Conectar();
-
             $consultaSql = "SELECT * FROM usuarios WHERE id = :id";
             $declaracao = $conexao->prepare($consultaSql);
             $declaracao->bindValue(':id', $id);
@@ -85,7 +79,6 @@
 
         public function listarTodosExceto($idAdmin){
             $conexao = Conexao::Conectar();
-
             $consultaSql = "SELECT * FROM usuarios WHERE id != :id";
             $declaracao = $conexao->prepare($consultaSql);
             $declaracao->bindValue(':id', $idAdmin);
@@ -103,29 +96,31 @@
 
         public function atualizarPerfil(Usuario $usuario){
             $conexao = Conexao::Conectar();
-
             $senhaHash = password_hash($usuario->getSenha(), PASSWORD_DEFAULT);
 
-            $consultaSql = "UPDATE usuarios SET nome = :nome, email = :email, senha = :senha, foto_perfil = :foto_perfil 
-                             WHERE id = :id";
+            $consultaSql = "UPDATE usuarios SET email = :email, senha = :senha, foto_perfil = :foto_perfil, 
+                    nome_empresa = :nome_empresa, responsavel_tecnico = :responsavel_tecnico 
+                     WHERE id = :id";
+
+            $nomeEmpresa = ($usuario instanceof Cliente) ? $usuario->getNomeEmpresa() : null;
+            $respTecnico = ($usuario instanceof Cliente) ? $usuario->getResponsavelTecnico() : null;
 
             $declaracao = $conexao->prepare($consultaSql);
             $declaracao->bindValue(':id', $usuario->getId());
-            $declaracao->bindValue(':nome', $usuario->getNome());
             $declaracao->bindValue(':email', $usuario->getEmail());
             $declaracao->bindValue(':senha', $senhaHash);
             $declaracao->bindValue(':foto_perfil', $usuario->getFotoPerfil());
+            $declaracao->bindValue(':nome_empresa', $nomeEmpresa);
+            $declaracao->bindValue(':responsavel_tecnico', $respTecnico);
 
             return $declaracao->execute();
         }
 
         public function excluir($idAlvo){
             $conexao = Conexao::Conectar();
-
             $consultaSql = "DELETE FROM usuarios WHERE id = :id";
             $declaracao = $conexao->prepare($consultaSql);
             $declaracao->bindValue(':id', $idAlvo);
-
             return $declaracao->execute();
         }
 
@@ -136,15 +131,16 @@
         private function montarUsuario(array $linha): Usuario {
             if ($linha['tipo'] === 'cliente') {
                 $usuario = new Cliente(
-                    $linha['nome'],
+                    $linha['responsavel_tecnico'], 
                     $linha['email'],
                     $linha['senha'],
                     $linha['nome_empresa'] ?? null,
+                    $linha['responsavel_tecnico'] ?? null,
                     $linha['foto_perfil'] ?? null
                 );
             } else {
                 $usuario = new Administrador(
-                    $linha['nome'],
+                    $linha['responsavel_tecnico'], 
                     $linha['email'],
                     $linha['senha'],
                     $linha['foto_perfil'] ?? null
@@ -152,7 +148,6 @@
             }
 
             $usuario->setId($linha['id']);
-
             return $usuario;
         }
     }

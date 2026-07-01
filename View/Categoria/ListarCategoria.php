@@ -60,8 +60,8 @@ require_once __DIR__ . '/../../Model/Categoria.php'; // Apresenta a classe para 
                                    class="btn-acao btn-editar">Editar</a>
                                 
                                 <a href="CategoriaController.php?acao=excluirCategoria&id_categoria=<?php echo $categoria->getId(); ?>" 
-                                   onclick="return confirm('Tem certeza?')" 
-                                   class="btn-acao btn-excluir">Excluir</a>
+                                    onclick="return confirm('Aviso: Ao excluir esta categoria, todos os produtos associados a ela ficarão sem categoria (NULL). Deseja realmente excluir?')" 
+                                    class="btn-acao btn-excluir">Excluir</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

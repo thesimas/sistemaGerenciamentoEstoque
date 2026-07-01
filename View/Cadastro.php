@@ -30,28 +30,17 @@
           enctype="multipart/form-data">
         <div style="text-align:left;">
 
-            <label>Nome do Titular</label>
-            <input
-                type="text"
-                name="nome"
-                required
-                placeholder="Nome completo">
-                
             <label>Nome da Empresa</label>
-            <input
-                type="text"
-                name="nome_empresa"
-                required
-                placeholder="Minha Empresa">
+            <input type="text" name="nome_empresa" required placeholder="Minha Empresa">
 
+            <label>Nome do Responsável Técnico</label>
+            <input type="text" name="responsavel_tecnico" required placeholder="Ex: João da Silva">
             <label>Email</label>
             <input
                 type="email"
                 name="email"
                 required
                 placeholder="email@empresa.com">
-
-
             <label>Foto de Perfil</label>
             <input
                 type="file"
