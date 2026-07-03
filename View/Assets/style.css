@@ -283,6 +283,73 @@ body.register-page{
 }
 
 /* =========================================
+   8. CADASTRO (Ajustado para compactação vertical)
+   ========================================= */
+
+body.register-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    padding: 20px 10px; /* Garante uma margem de respiro se a tela for muito pequena */
+}
+
+.register-card {
+    background: white;
+    padding: 25px 35px; /* Reduzido de 40px para diminuir a altura do card */
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 460px;
+    text-align: center;
+    margin: auto;
+}
+
+.titulo-register {
+    padding: 10px; /* Reduzido de 15px */
+    border: 1px solid #0056b3;
+    background: #007bff;
+    color: white;
+    border-radius: 5px;
+    font-size: 1.3rem; /* Tamanho mais harmônico */
+    margin-bottom: 12px;
+}
+
+/* Compactando especificamente os labels e inputs do card de cadastro */
+.register-card label {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #495057;
+    display: block;
+    margin-top: 4px;
+}
+
+.register-card input {
+    padding: 8px 12px; /* Reduz a altura interna do input */
+    margin: 3px 0 10px 0; /* Reduz a margem inferior de 15px para 10px */
+    font-size: 0.95rem;
+}
+
+.register-card input[type="file"] {
+    padding: 5px 8px; /* Input de arquivo consome menos espaço vertical */
+    font-size: 0.85rem;
+}
+
+/* Deixa o botão de cadastrar alinhado e destacado */
+.register-card .btn {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    font-size: 1rem;
+}
+
+.register-card p {
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+/* =========================================
    8. Verificação de Senha (Mostrar/Ocultar)
    ========================================= */
 
@@ -315,5 +382,4 @@ body.register-page{
     margin-bottom:15px;
     font-size:14px;
     font-weight:bold;
-
 }

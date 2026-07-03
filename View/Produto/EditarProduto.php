@@ -65,6 +65,7 @@
 
                 <label>Categoria:</label>
                 <select name="id_categoria" required>
+                    <option value="">-- Sem Categoria / Selecione --</option>
                     <?php foreach($listaCategorias as $categoria): ?>
                         <?php $selected = ($categoria->getId() == $dadosProduto->getCategoria()?->getId()) ? 'selected' : ''; ?>
                         <option value="<?php echo $categoria->getId(); ?>" <?php echo $selected; ?>>
@@ -72,9 +73,10 @@
                         </option>
                     <?php endforeach; ?>
                 </select>
-
+                
                 <label>Fornecedor:</label>
                 <select name="id_fornecedor" required>
+                    <option value="">-- Sem Fornecedor / Selecione --</option>
                     <?php foreach($listaFornecedores as $fornecedor): ?>
                         <?php $selected = ($fornecedor->getId() == $dadosProduto->getFornecedor()?->getId()) ? 'selected' : ''; ?>
                         <option value="<?php echo $fornecedor->getId(); ?>" <?php echo $selected; ?>>

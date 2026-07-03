@@ -32,7 +32,7 @@
                 move_uploaded_file($_FILES['foto_perfil']['tmp_name'], $destino.$nomeFoto);
                 $foto = $nomeFoto;
             }
-
+            
             $cliente = new Cliente(
                 $_POST['responsavel_tecnico'], 
                 $_POST['email'],
@@ -47,6 +47,7 @@
 
             $_SESSION['id'] = $cliente->getId();
             $_SESSION['nome'] = $cliente->getResponsavelTecnico();
+            $_SESSION['nome'] = $cliente->getNomeEmpresa();
             $_SESSION['email'] = $cliente->getEmail();
             $_SESSION['foto_perfil'] = $cliente->getFotoPerfil();
             $_SESSION['tipo'] = "cliente";
@@ -66,6 +67,7 @@
             if($usuario){
                 $_SESSION['id'] = $usuario->getId();
                 $_SESSION['nome'] = $usuario->getNome(); 
+                $_SESSION['nome'] = ($usuario instanceof Cliente) ? $usuario->getNomeEmpresa() : $usuario->getNome();
                 $_SESSION['email'] = $usuario->getEmail();
                 $_SESSION['foto_perfil'] = $usuario->getFotoPerfil();
                 $_SESSION['tipo'] = ($usuario instanceof Administrador) ? 'admin' : 'cliente';

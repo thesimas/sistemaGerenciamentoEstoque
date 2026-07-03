@@ -122,7 +122,7 @@
          * Mapeia o 'responsavel_tecnico' para a variável de sessão usada nas Views.
          */
         private function sincronizarSessao(Cliente $cliente): void {
-            $_SESSION['nome'] = $cliente->getResponsavelTecnico(); 
+            $_SESSION['nome'] = $cliente->getNomeEmpresa(); 
             $_SESSION['email'] = $cliente->getEmail();
             $_SESSION['foto_perfil'] = $cliente->getFotoPerfil();
         }

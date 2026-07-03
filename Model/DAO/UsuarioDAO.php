@@ -131,7 +131,7 @@
         private function montarUsuario(array $linha): Usuario {
             if ($linha['tipo'] === 'cliente') {
                 $usuario = new Cliente(
-                    $linha['responsavel_tecnico'], 
+                    $linha['nome_empresa'],
                     $linha['email'],
                     $linha['senha'],
                     $linha['nome_empresa'] ?? null,

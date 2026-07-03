@@ -38,7 +38,6 @@ function togglePassword(id, botao){
 
         input.type = "text";
 
-        botao.textContent = "🙈";
 
     }else{
 
