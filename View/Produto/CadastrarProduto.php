@@ -36,7 +36,12 @@
 
     <div class="container">
         <h1>Cadastrar Novo Produto</h1>
-
+        <?php if(isset($_SESSION['erro'])): ?>
+            <script>
+                alert("Aviso do Sistema:\n\n<?php echo addslashes($_SESSION['erro']); ?>");
+            </script>
+            <?php unset($_SESSION['erro']); ?>
+        <?php endif; ?>
         <form action="ProdutoController.php" method="POST">
             <fieldset>
                 <legend>Dados Principais</legend>

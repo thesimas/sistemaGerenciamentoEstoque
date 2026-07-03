@@ -35,7 +35,12 @@
 
     <div class="container">
         <h1>Gerenciamento de Estoque</h1>
-        
+        <?php if(isset($_SESSION['erro'])): ?>
+            <script>
+                alert("Aviso do Sistema:\n\n<?php echo addslashes($_SESSION['erro']); ?>");
+            </script>
+            <?php unset($_SESSION['erro']); ?>
+        <?php endif; ?>
         <a href="ProdutoController.php?acao=prepararCadastro" class="btn">
             + Novo Produto
         </a>

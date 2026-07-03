@@ -64,20 +64,20 @@
             $id_fornecedor = $_POST['id_fornecedor'];
 
             if(empty($sku) || empty($nome) || empty($descricao) || $preco === '' || $quantidade === '' || $estoqueMinimo === '' || empty($id_fornecedor) || empty($id_categoria)){
-                echo "<p>Todos os campos são obrigatórios.</p>";
-                header("Refresh: 3; URL=../Controller/ProdutoController.php?acao=prepararCadastro");
+                $_SESSION['erro'] = "Todos os campos são obrigatórios.";
+                header("Location: ../Controller/ProdutoController.php?acao=prepararCadastro");
                 exit();
             }
 
             if(!is_numeric($preco) || !is_numeric($quantidade) || !is_numeric($estoqueMinimo)){
-                echo "<p>Os campos preço, quantidade e estoque mínimo devem ser numéricos.</p>";
-                header("Refresh: 3; URL=../Controller/ProdutoController.php?acao=prepararCadastro");
+                $_SESSION['erro'] = "Os campos preço, quantidade e estoque mínimo devem ser numéricos.";
+                header("Location: ../Controller/ProdutoController.php?acao=prepararCadastro");
                 exit();
             }
 
             if($preco < 0 || $quantidade < 0 || $estoqueMinimo < 0){
-                echo "<p>Os campos preço, quantidade e estoque mínimo não podem ser negativos.</p>";
-                header("Refresh: 3; URL=../Controller/ProdutoController.php?acao=prepararCadastro");
+                $_SESSION['erro'] = "Os campos preço, quantidade e estoque mínimo não podem ser negativos.";
+                header("Location: ../Controller/ProdutoController.php?acao=prepararCadastro");
                 exit();
             }
 
@@ -137,18 +137,17 @@
             $id_usuario = $_SESSION['id'];
             $data = date('Y-m-d H:i:s');
 
-            if($qtdMovimentada <= 0){
-                echo "<p>O campo quantidade não pode ser zero ou negativo.</p>";
-                header("Refresh: 3; URL=../Controller/ProdutoController.php?acao=listarProdutos");
+           if($qtdMovimentada <= 0){
+                $_SESSION['erro'] = "O campo quantidade não pode ser zero ou negativo.";
+                header("Location: ../Controller/ProdutoController.php?acao=listarProdutos");
                 exit();
             }
 
-            // O DAO já devolve um OBJETO Produto, com Usuario/Fornecedor/Categoria embutidos
             $produto = $this->produtoDAO->buscarPorId($id_produto, $id_usuario);
 
             if(!$produto) {
-                echo "<p>Produto não encontrado!</p>";
-                header("Refresh: 3; URL=../Controller/ProdutoController.php?acao=listarProdutos");
+                $_SESSION['erro'] = "Produto não encontrado!";
+                header("Location: ../Controller/ProdutoController.php?acao=listarProdutos");
                 exit();
             }
 
@@ -160,8 +159,9 @@
                 if($saldoAtual >= $qtdMovimentada){
                     $novoSaldo = $saldoAtual - $qtdMovimentada;
                 } else {
-                    echo "<p>Estoque insuficiente para realizar a saída.</p>";
-                    header("Refresh: 3; URL=../Controller/ProdutoController.php?acao=listarProdutos");
+                    // CORREÇÃO DO ESTOQUE INSUFICIENTE:
+                    $_SESSION['erro'] = "Estoque insuficiente para realizar a saída (Saldo atual: {$saldoAtual}).";
+                    header("Location: ../Controller/ProdutoController.php?acao=listarProdutos");
                     exit();
                 }
             }

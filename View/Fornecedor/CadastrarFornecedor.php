@@ -30,7 +30,12 @@
 
     <div class="container">
         <h1>Cadastrar Fornecedor</h1>
-
+        <?php if(isset($_SESSION['erro'])): ?>
+            <script>
+                alert("Aviso do Sistema:\n\n<?php echo addslashes($_SESSION['erro']); ?>");
+            </script>
+            <?php unset($_SESSION['erro']); ?>
+        <?php endif; ?>            
         <form action="FornecedorController.php" method="POST">
             <fieldset>
                 <label>Nome da Empresa:</label>

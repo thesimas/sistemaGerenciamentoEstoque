@@ -47,8 +47,8 @@
             $telefone = $_POST['telefone'];
 
             if(empty($nomeEmpresa) || empty($cnpj) || empty($email) || empty($telefone)){
-                echo "<p>Todos os campos são obrigatórios.</p>";
-                header("Refresh: 2; URL=../Controller/FornecedorController.php?acao=prepararCadastro");
+                $_SESSION['erro'] = "Todos os campos são obrigatórios.";
+                header("Location: ../Controller/FornecedorController.php?acao=prepararCadastro");
                 exit();
             }
 
