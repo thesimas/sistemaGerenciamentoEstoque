@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Novo Fornecedor</title>
     <link rel="stylesheet" href="../View/Assets/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <nav>
@@ -32,7 +33,11 @@
         <h1>Cadastrar Fornecedor</h1>
         <?php if(isset($_SESSION['erro'])): ?>
             <script>
-                alert("Aviso do Sistema:\n\n<?php echo addslashes($_SESSION['erro']); ?>");
+                Swal.fire({
+                    icon: "error",
+                    title: "Aviso do Sistema",
+                    text: "<?php echo addslashes($_SESSION['erro']); ?>"
+                });
             </script>
             <?php unset($_SESSION['erro']); ?>
         <?php endif; ?>            

@@ -58,8 +58,10 @@
                                    class="btn-acao btn-editar">Editar</a>
                                 
                                 <a href="FornecedorController.php?acao=excluirFornecedor&id_fornecedor=<?php echo $fornecedor->getId(); ?>" 
-                                    onclick="return confirm('Aviso: Ao excluir este fornecedor, todos os produtos associados a ele ficarão sem fornecedor (NULL). Deseja realmente excluir?')" 
-                                    class="btn-acao btn-excluir">Excluir</a>
+                                   class="btn-acao btn-excluir"
+                                   onclick="confirmarExclusao(event, this.href)">
+                                   Excluir
+                                </a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -69,5 +71,7 @@
             </tbody>
         </table>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../View/Scripts/scripts.js"></script>
 </body>
 </html>

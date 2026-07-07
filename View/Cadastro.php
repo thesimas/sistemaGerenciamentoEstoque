@@ -93,6 +93,6 @@
     <p>Já possui cadastro? <a class="gerencia" href="../View/Login.php">Faça Login</a></p>
 </div>
 
-<script src="Assets/Scripts/scripts.js"></script>
+<script src="../View/Scripts/scripts.js"></script>
 </body>
 </html>

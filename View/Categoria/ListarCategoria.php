@@ -60,7 +60,7 @@ require_once __DIR__ . '/../../Model/Categoria.php'; // Apresenta a classe para 
                                    class="btn-acao btn-editar">Editar</a>
                                 
                                 <a href="CategoriaController.php?acao=excluirCategoria&id_categoria=<?php echo $categoria->getId(); ?>" 
-                                    onclick="return confirm('Aviso: Ao excluir esta categoria, todos os produtos associados a ela ficarão sem categoria (NULL). Deseja realmente excluir?')" 
+                                    onclick="confirmarExclusao(event, this.href)"
                                     class="btn-acao btn-excluir">Excluir</a>
                             </td>
                         </tr>
@@ -71,5 +71,7 @@ require_once __DIR__ . '/../../Model/Categoria.php'; // Apresenta a classe para 
             </tbody>
         </table>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../View/Scripts/scripts.js"></script>
 </body>
 </html>

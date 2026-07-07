@@ -48,8 +48,9 @@
         <br></strong></p>
         <a href="ClienteController.php?acao=dashboard" class="btn" style="margin-top: 20px;">Voltar ao Menu</a>
         <a href="ClienteController.php?acao=prepararEdicaoPerfil" class="btn" style="margin-top: 20px; background-color: #6c757d;">Editar Perfil</a>
-        <a href="ClienteController.php?acao=excluirPerfil" class="btn" style="margin-top: 20px; background-color: #dc3545;" onclick="return confirm('ATENÇÃO: Você está prestes a excluir sua conta! TODOS os seus produtos, categorias e fornecedores serão apagados permanentemente. Deseja realmente excluir seu perfil?')">Excluir Minha Conta</a>
+        <a href="ClienteController.php?acao=excluirPerfil" class="btn" style="margin-top: 20px; background-color: #dc3545;" onclick="confirmarExclusaoPerfil(event, this.href)">Excluir Minha Conta</a>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../View/Scripts/scripts.js"></script>
 </body>
 </html>

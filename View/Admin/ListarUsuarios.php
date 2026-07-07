@@ -54,7 +54,7 @@
                             </td>
                             <td>
                                 <a href="AdminController.php?acao=excluirUsuario&id=<?php echo $user->getId(); ?>" 
-                                   onclick="return confirm('Tem certeza que deseja excluir este usuário? Todos os dados dele (produtos, fornecedores) serão apagados!')" 
+                                   onclick="confirmarExclusaoCliente(event, this.href)"
                                    style="color: red; font-weight: bold;">
                                    [Excluir Conta]
                                 </a>
@@ -69,5 +69,7 @@
             </tbody>
         </table>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../View/Scripts/scripts.js"></script>
 </body>
 </html>

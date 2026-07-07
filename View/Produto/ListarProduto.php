@@ -9,6 +9,7 @@
     <meta charset="UTF-8">
     <title>Estoque - Produtos</title>
     <link rel="stylesheet" href="../View/Assets/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <nav>
@@ -37,7 +38,11 @@
         <h1>Gerenciamento de Estoque</h1>
         <?php if(isset($_SESSION['erro'])): ?>
             <script>
-                alert("Aviso do Sistema:\n\n<?php echo addslashes($_SESSION['erro']); ?>");
+                Swal.fire({
+                    icon: "error",
+                    title: "Aviso do Sistema",
+                    text: "<?php echo addslashes($_SESSION['erro']); ?>"
+                });
             </script>
             <?php unset($_SESSION['erro']); ?>
         <?php endif; ?>
@@ -101,7 +106,7 @@
                                 <a href="ProdutoController.php?acao=prepararEdicaoProduto&id_produto=<?php echo $produto->getId(); ?>" 
                                  class="btn-acao btn-editar">Editar</a>
                                 <a href="ProdutoController.php?acao=excluirProduto&id_produto=<?php echo $produto->getId(); ?>" 
-                                   onclick="return confirm('Tem certeza que deseja excluir?')" 
+                                   onclick="confirmarExclusao(event, this.href)" 
                                  class="btn-acao btn-excluir">Excluir</a>
                             </td>
                         </tr>
@@ -114,5 +119,7 @@
             </tbody>
         </table>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../View/Scripts/scripts.js"></script>
 </body>
 </html>
